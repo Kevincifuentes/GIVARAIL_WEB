@@ -1,0 +1,13 @@
+{
+  "name": "proyecto",
+  "version": "0.0.1",
+  "dependencies": {
+    "ejs": "2.3.4",
+    "angular-socialshare": "^0.1.19",
+    "mongodb": "2.0.49"
+  },
+  "engines": {
+    "node": "5.1.x",
+    "npm": "3.3.x"
+  }
+}
