@@ -1,0 +1,584 @@
+#divAbajo{
+	position: absolute;
+	z-index: 1000;
+	width: 300px;
+	top: 75px;
+	height: 65px;
+	margin-left: 84px;
+}
+#sombra{
+	top: 10px;
+	left: 28px;
+    padding: 6px;
+    float: left;
+    display: inline;
+    position: absolute;
+    z-index: 1000;
+    background-color: rgba(153, 186, 221,0.65);
+    margin-left: 10px;
+	border-style: groove;
+	border-color: #0000ff;
+    border-width: 2px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(96,147,202,0.5);
+}
+#sombra img{
+	width: 40px;
+	height: 40px;
+	margin-left: 3px;
+	margin-right: 3px;
+	cursor: pointer;
+	
+}
+#divAbajo img{
+	width: 60px;
+	height: 60px;
+	margin-left: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+	-webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+}
+
+.markerMultimedia{
+	width: 320px;
+	
+
+}
+.markerMultimedia h1{
+	width: 100%;
+	text-align: center;
+}
+.markerMultimedia img{
+	width: 100%;
+	
+}
+.lFecha{
+	float: right;
+}
+.olAlphaImg{
+	cursor: pointer !important;
+}
+.divMenu{
+	margin-left: 10px;
+    width: 340px;
+    margin-top: 150px;
+
+    padding: 10px;
+    /* height: 100%; */
+   
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    background-color: rgba(255,255,255,1);
+    
+    z-index: 9099;
+    overflow: auto;
+    height: -moz-calc(100% - 160px);
+    height: -webkit-calc(100% - 160px);
+    height: calc(100% - 160px);
+
+
+}
+#menuArriba{
+	position: absolute;
+	z-index: 9999;
+	left: 370px;
+	width: -moz-calc(100% - 380px);
+    width: -webkit-calc(100% - 380px);
+    width: calc(100% - 380px);
+    background-color: rgb(200,200,200);
+    /*border-radius: 15px;*/
+    height: 40px;
+    top: 10px;
+    padding-right: 15px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+}
+
+#divOpcionesUser{
+	position: absolute;
+	z-index: 9999;
+	right: 0px;
+	width: 130px;
+    background-color: rgb(200,200,200);
+    /*border-radius: 15px;*/
+    
+    top: 40px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+}
+#divOpcionesUser label{
+	  border-top: 1px solid #000;
+	  font-size: 12px;
+		width: 100%;
+	    height: 36px;
+	    padding-left: 5px;
+	    padding-top: 8px;
+	    padding-right: 5px;
+	    margin:0px;
+}
+
+#divOpcionesUser:hover{
+	display:block;
+		
+
+}
+
+#divInterviews{
+	position: absolute;
+	z-index: 9999;
+	width: -moz-calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
+    width: calc(100% - 20px);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+
+    height: 80%;
+
+    margin: 0 auto;
+    text-align: center;
+    
+    top: 85px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+
+    right: 10px;
+}
+
+#divNewInterview{
+	position: absolute;
+	z-index: 9999;
+	width: -moz-calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
+    width: calc(100% - 20px);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+
+    height: 80%;
+
+    margin: 0 auto;
+    
+    top: 85px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+
+    right: 10px;
+
+    overflow-y: scroll; 
+}
+
+#divListaEntrevistasUsuario{
+	float: left;
+	width: 38%;
+	margin: 1%;
+	overflow-y: scroll;  
+	height:100%;
+	text-align: left;
+	border: 2px solid grey;
+    border-radius: 5px;
+}
+
+#divInfoEntrevista{
+	float: right;
+	width: 58%;
+	margin: 1%;
+	border: 2px solid grey;
+    border-radius: 5px;
+    height: 100%;
+}
+
+.rowEntrevista{	
+	background-color:#848484;
+	width: 100%;
+	border-style: solid;
+	border-width: 3px;
+	border-color: #FFFFFF;
+}
+
+.textoRowEntrevista{
+	color:#FFFFFF;
+	text-align: left;
+}
+
+.divIcoEntrevista{
+	float: left;
+	width: 48px;
+}
+
+.imgIcoEntrevista{
+	width:32px; 
+	height: 32px; 
+	margin-right: 7px;
+	margin-top: 7px;
+	margin-left: 7px;
+	margin-bottom: 7px;
+}
+
+#divInfoArriba{
+	position: absolute;
+	z-index: 9999;
+	right: 10px;
+	width: -moz-calc(100% - 360px);
+    width: -webkit-calc(100% - 360px);
+    width: calc(100% - 360px);
+    width: 880px;
+    background-color: rgb(200,200,200);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    
+    top: 80px;
+    padding-right: 15px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+}
+#divGrupoMultimediasusuario{
+	position: absolute;
+	z-index: 9999;
+	left: 350px;
+	max-width: -moz-calc(100% - 360px);
+    max-width: -webkit-calc(100% - 360px);
+    max-width: calc(100% - 360px);
+    min-width:500px;
+    background-color: rgb(200,200,200);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    
+    top: 150px;
+    padding-right: 15px;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.5);
+}
+
+#menuArriba label{
+	float: right;
+	margin-left: 30px;
+	margin-top: 10px;
+	cursor: pointer;
+}
+#menuArriba label:hover{
+	text-decoration: underline;
+}
+#popoupMultimedia_contentDiv{
+	height: auto !important;
+
+}
+#popoupusuario_contentDiv{
+	height: 200px !important;
+}
+#barraHistorico{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 999;
+	width: 100%;
+	height: 60px;
+	background-color: rgba(255,255,255,0.75);
+}
+#barraRealtime{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 997;
+	width: 100%;
+	height: 60px;
+	background-color: rgba(255,255,255,0.75);
+}
+#barraRuta{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 1000;
+	width: 100%;
+	height: 60px;
+	background-color: rgba(255,255,255,0.75);
+}
+#divVelocidad{
+	position: absolute;
+	bottom: 60px;
+	left: 0px;
+	z-index: 999;
+	width: 100%;
+	height: 90px;
+	background-color: rgba(255,255,255,0.75);
+
+}
+#divGraficoVel{
+	height: 70px;
+	margin-left: 200px;
+	margin-top: -60px;
+	margin-right: 20px;
+	background-color: rgba(179, 179, 179, 0.25);
+}
+#divGraficoVel2{
+	height: 70px;
+	margin-left: 200px;
+	margin-top: -70px;
+	margin-right: 20px;
+	background-color: rgba(0, 0, 0, 0);
+}
+#divLogin{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 99999;
+}
+#divInfoInicio{
+	position: absolute;
+	top: 60px;
+	width: 800px;
+	left: 50%;
+	margin-left: -400px;
+	border-style: solid;
+	border-color: #fff;
+	border-width: 5px;
+	color: #fff;
+	padding: 50px;
+	text-align: justify;
+
+}
+#formLogin{
+	border-radius: 15px;
+	padding: 15px;
+	background-color: rgba(255, 255, 255, 0.5);
+	position: absolute;
+	width: 250px;
+	left: 50%;
+	margin-left: -125px;
+	height: 200px;
+	top: 400px;
+	
+}
+#formLogin label{
+	width: 100%;
+	text-align: center;
+}
+#formLogin input{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+#formLogin button{
+	margin-top: 10px;
+	margin-left: 75px;
+	width: 80px;
+}
+.divResultado{
+	width: 100%;
+	background-color: rgba(100, 100, 100, 0.5);
+	padding: 5px;
+	border-radius: 10px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	height: 50px;
+
+}
+.divResultadoUsuario{
+	width: 100%;
+	background-color: rgba(100, 100, 100, 0.5);
+	padding: 5px;
+	border-radius: 10px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	height: 50px;
+	cursor:pointer;
+}
+.divResultadoUsuario:hover{
+	background-color: rgba(150, 150, 150, 0.5);
+}
+#divFotoGrande{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 99999;
+}
+#imgGrande{
+
+	max-width: 100%;
+	max-height: 100%;
+	padding: 50px;
+	text-align: center;
+}
+#labelClickBuscar{
+	position: absolute;
+	width: 400px;
+	top: 50px;
+	left: 50%;
+	margin-left: -50px;
+	background-color: rgba(0,0,0,0.7);
+	padding: 10px;
+	border-radius: 10px;
+	z-index: 99999;
+	text-align: center;
+	color: #fff;
+}
+#divIrA{
+	position: absolute;
+	left: 375px;
+    top: 7px;
+	z-index: 99;
+	border-radius: 15px;
+	
+	padding: 10px;
+	color: #555;
+	z-index: 9999;
+}
+#btnMiPos{
+	cursor: pointer;
+    position: absolute;
+    left: 630px;
+    top: 16px;
+    z-index: 99;
+    border-radius: 10px;
+    padding: 2px;
+    z-index: 9999;
+    width: 26px;
+    
+}
+#buscandoPos{
+	position: absolute;
+    left: 608px;
+    top: 14px;
+    z-index: 99;
+  
+    padding: 2px;
+    z-index: 9999;
+    width: 32px;
+  
+}
+#menuIzquierda{
+	width: 360px;
+    height: 100%;
+    z-index: 999;
+    position: absolute;
+    top: 0px;
+
+	background-color: rgb(200,200,200);
+	-webkit-box-shadow: 5px 0px 2px 0px rgba(0,0,0,0.5);
+}
+#fondoModoVideo{
+	z-index: 999998;
+	background-color: rgba(0,0,0,0.7);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+}
+#divModoVideo{
+	overflow: hidden;
+	z-index: 999999;
+	position: absolute;
+	background-color: rgba(255,255,255,255);
+	width: 800px;
+	max-height: 600px;
+	left: 50%;
+	top: 50%;
+	margin-left: -400px;
+	margin-top: -300px;
+	border-radius: 10px;
+}
+#mvUsuario{
+	width: 50%;
+	height: 50px;
+	float:left;
+	
+}
+#mvVelocidadArriba{
+	width: 50%;
+	float:right;
+	height: 125px;
+
+}
+#mvMapa{
+	float: left;
+	width: 50%;
+	height: 400px;
+	
+}
+#mvMultimedias{
+	float: left;
+	width: 50%;
+	height: 400px;
+	
+}
+#mvMultiVacio{
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	border-width: 8px;
+	border-color: #256fea;
+	border-style: solid;
+}
+#mvControles{
+	padding-top: 19px;
+    margin-top: 525px;
+    width: 100%;
+    height: 50px;
+    padding-left: 45px;
+    padding-right: 70px;
+	
+}
+#mvVelocidad{
+	width: 50%;
+	float:left;
+	height: 75px;
+	
+}
+#botPLayMV{
+	width: 24px;
+	height: 24px;
+    position: absolute;
+    left: 6px;
+    margin-top: -6px;
+    cursor: pointer;
+}
+.grupoMultimediaUsuario{
+	cursor: pointer !important;
+	padding: 7px;
+}
+.grupoMultimediaUsuario label{
+	cursor: pointer !important;
+}
+#divDatosMV .titulo{
+	text-align: right;
+	width: 70px;
+	float: left;
+	font-weight: bold;
+}
+#divDatosMV .dato{
+	text-align: left;
+	float: left;
+	width: 130px;
+	margin-left: 8px;
+
+}
+#divDatosMV{
+	margin-top: 140px;
+}
+
+.modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) { 
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+#menuArriba #lUserName:hover  #divOpcionesUser {
+    display:block;  
+}
+
+
+
