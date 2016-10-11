@@ -11,6 +11,7 @@ var handle = {};
   
 handle["/"] = urlResponseHandlers.index;
 handle["/index"] = urlResponseHandlers.index;
+handle["/idtren"] = urlResponseHandlers.obtenerTrenCodigo;
 
 server.start(controller.dispatch, handle);
 

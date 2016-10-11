@@ -18,7 +18,6 @@ function handleStatic(pageUrl, response)
 			response.writeHead(200, {'Content-Type': 'text/html'});;
 			return;
 		}
-		//Do not send Content type, browser will pick it up.
 		response.writeHead(200);
 
 		console.log("Empiezo a leer "+pageUrl);
@@ -26,6 +25,7 @@ function handleStatic(pageUrl, response)
 		fileStream.on('end', function() {
 			response.end();
 		});
+		
 		//envia fragmentos hasta acabar, cuando entonces llama al anterior on.('end') a ejecutar.
 		fileStream.pipe(response);
 		return;

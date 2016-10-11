@@ -47,7 +47,9 @@ function establecerEventos(){
 	}
 }
 
-app.controller("giv2railController", [ '$scope', 'leafletData', function($scope, leafletData) {
+app.controller("giv2railController", [ '$scope', 'leafletData', '$window', function($scope, $window, leafletData) {
+	$scope.marcadoresHistorico = new Array();
+	$scope.patron = new RegExp('')
 	establecerEventos();
 	 $scope.data = {
 	    opcionesBusqueda: [
@@ -96,9 +98,9 @@ app.controller("giv2railController", [ '$scope', 'leafletData', function($scope,
 	           if(tipo === "posicion"){
 	           	 var contenido = JSON.parse(lineas[contador]);
 	           	 //	HABRÍA QUE OBTENER EL ID DE CADA TREN Y MIRAR SI YA HAY MARCADORES Y SI NO AÑADIR
-	           	 if(numeroMarcadoresAhora["tren1"] != numeroMaximoAMostrar)
+	           	 if(numeroMarcadoresAhora[contenido.idtren] != numeroMaximoAMostrar)
 	           	 {
-	           	 	ultimoActualizadoTrenes["tren1"] = -1;
+	           	 	ultimoActualizadoTrenes[contenido.idtren] = -1;
 	           	 	marcador = {
 		                lat: contenido.latitud,
 		                lng: contenido.longitud,
@@ -106,7 +108,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', function($scope,
                         title: "Tren",
                         draggable: true,
                         label: {
-                            message: "El tren está aquí" + numeroMarcadoresAhora["tren1"] +" "+ new Date().toUTCString(),
+                            message: "El tren está aquí" + numeroMarcadoresAhora[contenido.idtren] +" "+ new Date().toUTCString(),
                             options: {
                                 noHide: false
                             }
@@ -118,51 +120,52 @@ app.controller("giv2railController", [ '$scope', 'leafletData', function($scope,
 		                    popupAnchor:  [-3, -76] // punto relativo a donde el popup debería abrirse
                         }
 		            };
-		            todosMarcadores["tren1"].push(marcador);
+		            todosMarcadores[contenido.idtren].push(marcador);
 		            $scope.markers.push(marcador);
-		            numeroMarcadoresAhora["tren1"]++;
+		            $scope.$apply();
+		            numeroMarcadoresAhora[contenido.idtren]++;
 	           	 }
 	           	 else
 	           	 {
-	           	 	todosMarcadores["tren1"][ultimoActualizadoTrenes["tren1"]+1].lat = contenido.latitud;
-	           	 	todosMarcadores["tren1"][ultimoActualizadoTrenes["tren1"]+1].lng = contenido.longitud;
-	           	 	todosMarcadores["tren1"][ultimoActualizadoTrenes["tren1"]+1].icon.iconUrl = arrayIconos[4];
-	           	 	todosMarcadores["tren1"][ultimoActualizadoTrenes["tren1"]+1].label.message = "El tren está aquí "+ new Date().toUTCString();
-	           	 	switch(ultimoActualizadoTrenes["tren1"]+1) {
+	           	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lat = contenido.latitud;
+	           	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lng = contenido.longitud;
+	           	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].icon.iconUrl = arrayIconos[4];
+	           	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].label.message = "El tren está aquí "+ new Date().toUTCString();
+	           	 	switch(ultimoActualizadoTrenes[contenido.idtren]+1) {
 					    case 0:
-					        todosMarcadores["tren1"][4].icon.iconUrl = arrayIconos[3];
-		           	 		todosMarcadores["tren1"][3].icon.iconUrl = arrayIconos[2];
-		           	 		todosMarcadores["tren1"][2].icon.iconUrl = arrayIconos[1];
-		           	 		todosMarcadores["tren1"][1].icon.iconUrl = arrayIconos[0];
-		           	 		ultimoActualizadoTrenes["tren1"]++;
+					        todosMarcadores[contenido.idtren][4].icon.iconUrl = arrayIconos[3];
+		           	 		todosMarcadores[contenido.idtren][3].icon.iconUrl = arrayIconos[2];
+		           	 		todosMarcadores[contenido.idtren][2].icon.iconUrl = arrayIconos[1];
+		           	 		todosMarcadores[contenido.idtren][1].icon.iconUrl = arrayIconos[0];
+		           	 		ultimoActualizadoTrenes[contenido.idtren]++;
 					        break;
 					    case 1:
-					    	todosMarcadores["tren1"][4].icon.iconUrl = arrayIconos[2];
-		           	 		todosMarcadores["tren1"][3].icon.iconUrl = arrayIconos[1];
-		           	 		todosMarcadores["tren1"][2].icon.iconUrl = arrayIconos[0];
-		           	 		todosMarcadores["tren1"][0].icon.iconUrl = arrayIconos[3];
-					        ultimoActualizadoTrenes["tren1"]++;
+					    	todosMarcadores[contenido.idtren][4].icon.iconUrl = arrayIconos[2];
+		           	 		todosMarcadores[contenido.idtren][3].icon.iconUrl = arrayIconos[1];
+		           	 		todosMarcadores[contenido.idtren][2].icon.iconUrl = arrayIconos[0];
+		           	 		todosMarcadores[contenido.idtren][0].icon.iconUrl = arrayIconos[3];
+					        ultimoActualizadoTrenes[contenido.idtren]++;
 					        break;
 					    case 2:
-					    	todosMarcadores["tren1"][4].icon.iconUrl = arrayIconos[1];
-		           	 		todosMarcadores["tren1"][3].icon.iconUrl = arrayIconos[0];
-		           	 		todosMarcadores["tren1"][1].icon.iconUrl = arrayIconos[3];
-		           	 		todosMarcadores["tren1"][0].icon.iconUrl = arrayIconos[2];
-					        ultimoActualizadoTrenes["tren1"]++;
+					    	todosMarcadores[contenido.idtren][4].icon.iconUrl = arrayIconos[1];
+		           	 		todosMarcadores[contenido.idtren][3].icon.iconUrl = arrayIconos[0];
+		           	 		todosMarcadores[contenido.idtren][1].icon.iconUrl = arrayIconos[3];
+		           	 		todosMarcadores[contenido.idtren][0].icon.iconUrl = arrayIconos[2];
+					        ultimoActualizadoTrenes[contenido.idtren]++;
 					        break;
 					    case 3:
-					        todosMarcadores["tren1"][2].icon.iconUrl = arrayIconos[3];
-		           	 		todosMarcadores["tren1"][1].icon.iconUrl = arrayIconos[2];
-		           	 		todosMarcadores["tren1"][0].icon.iconUrl = arrayIconos[1];
-		           	 		todosMarcadores["tren1"][4].icon.iconUrl = arrayIconos[0];
-		           	 		ultimoActualizadoTrenes["tren1"]++;
+					        todosMarcadores[contenido.idtren][2].icon.iconUrl = arrayIconos[3];
+		           	 		todosMarcadores[contenido.idtren][1].icon.iconUrl = arrayIconos[2];
+		           	 		todosMarcadores[contenido.idtren][0].icon.iconUrl = arrayIconos[1];
+		           	 		todosMarcadores[contenido.idtren][4].icon.iconUrl = arrayIconos[0];
+		           	 		ultimoActualizadoTrenes[contenido.idtren]++;
 					        break;
 					    case 4:
-					    	todosMarcadores["tren1"][3].icon.iconUrl = arrayIconos[3];
-		           	 		todosMarcadores["tren1"][2].icon.iconUrl = arrayIconos[2];
-		           	 		todosMarcadores["tren1"][1].icon.iconUrl = arrayIconos[1];
-		           	 		todosMarcadores["tren1"][0].icon.iconUrl = arrayIconos[0];
-		           	 		ultimoActualizadoTrenes["tren1"] = -1;
+					    	todosMarcadores[contenido.idtren][3].icon.iconUrl = arrayIconos[3];
+		           	 		todosMarcadores[contenido.idtren][2].icon.iconUrl = arrayIconos[2];
+		           	 		todosMarcadores[contenido.idtren][1].icon.iconUrl = arrayIconos[1];
+		           	 		todosMarcadores[contenido.idtren][0].icon.iconUrl = arrayIconos[0];
+		           	 		ultimoActualizadoTrenes[contenido.idtren] = -1;
 					}
 	           	 }
 	           	 if(primeraVez === true)
@@ -171,6 +174,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', function($scope,
 	           	 	$scope.center.lat = contenido.latitud;
 		         	$scope.center.lng = contenido.longitud;
 	           	 }
+	           	 $scope.$apply();
 	           }
 	       }),
 	    { priority: 9 }
@@ -186,8 +190,100 @@ app.controller("giv2railController", [ '$scope', 'leafletData', function($scope,
         }
     });
 
+    $scope.comprobarBusqueda = function(){
+
+    	if($scope.data.seleccion == "Fecha")
+    	{
+    		return new RegExp(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    	}
+    	else
+    	{
+    		return new RegExp('');
+    	}
+
+    }
+
     $scope.buscarHistorico = function(){
-    	console.log("Llego");
-    	console.log($scope.data.seleccion);
+    	if($scope.data.seleccion === "ID tren")
+    	{
+    		var id = $scope.data.inputBusqueda;
+    		$.ajax({
+                    type: "POST",
+                    url: "idtren",
+                    contentType: "application/json",
+                    dataType:'json',
+                    data: JSON.stringify({ "idtren" : id}),
+                    success: function(data){
+                        $.each(data, function(i, item) {
+                          console.log(data[i].posicion.latitud);
+                          	marcador = {
+				                lat: data[i].posicion.latitud,
+				                lng: data[i].posicion.longitud,
+				                focus: true,
+		                        title: "Tren",
+		                        draggable: true,
+		                        label: {
+		                            message: "El tren está aquí " + new Date().toUTCString(),
+		                            options: {
+		                                noHide: false
+		                            }
+		                        },
+		                        icon: {
+		                        	iconUrl: arrayIconos[4],
+				                    iconSize:     [38, 38], // tamano del icono
+				                    iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
+				                    popupAnchor:  [-3, -76] // punto relativo a donde el popup debería abrirse
+		                        }
+		           			};
+			            $scope.marcadoresHistorico.push(marcador);
+			            $scope.markers.push(marcador);
+			            $scope.$apply();
+						});
+
+                    },
+                    beforeSend:function()
+                    {
+                        $("#botonActualizarObjeto").html("Actualizando...");
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Ha ocurrido un error al obtener el tren.");
+                        var err = eval("(" + xhr.responseText + ")");
+                        alert(err.Message);
+                    },
+                    async: true
+			});
+    	}
+    	else
+    	{
+    		if(/^(\d{2})\/(\d{2})\/(\d{4})$/.test($scope.data.inputBusqueda))
+    		{
+    			console.log("Correcto");
+    			$.ajax({
+                    type: "POST",
+                    url: "trenesFecha",
+                    contentType: "application/json",
+                    dataType:'json',
+                    data: JSON.stringify({ "idtren" : $scope.data.inputBusqueda}),
+                    success: function(data){
+                        console.log("Correcto");
+
+                    },
+                    beforeSend:function()
+                    {
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Ha ocurrido un error al obtener los trenes en esa fecha.");
+                        var err = eval("(" + xhr.responseText + ")");
+                        alert(err.Message);
+                    },
+                    async: true
+				});
+    		}
+    		else
+    		{
+    			alert("ERROR: El formato de fecha es incorrecto");
+    		}
+    	}
     }
 }]);

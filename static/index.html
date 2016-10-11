@@ -41,10 +41,13 @@
         <h2>Buscar en el histórico</h2>
       </div>
       <div class="modal-body">
-        <label>Buscar por: </label>
-        <select ng-model="data.seleccion" ng-options="opcion for opcion in data.opcionesBusqueda"></select>
-        <input type="text" name="busqueda" ng-model="data.inputBusqueda" required>
-        <button ng-click="buscarHistorico()">Buscar</button>
+        <ng-form name="exampleForm">
+          <label>Buscar por: </label>
+          <select ng-model="data.seleccion" ng-change="" ng-options="opcion for opcion in data.opcionesBusqueda"></select>
+          <input type="text" name="busqueda" ng-model="data.inputBusqueda" ng-pattern="comprobarBusqueda()" placeholder="Utilizar dd/mm/yyyy o ID" required>
+          <button ng-click="buscarHistorico()">Buscar</button>
+          <small class="error" ng-show="exampleForm.busqueda.$error.pattern">Patrón invalido</small>
+        </ng-form>
       </div>
       <div class="modal-footer">
       </div>
