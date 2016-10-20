@@ -1,4 +1,4 @@
-var app = angular.module("giv2railapp", ['leaflet-directive'
+var app = angular.module("giv2railapp", ['leaflet-directive',
 ]);
 
 app.config(function($logProvider){
@@ -45,9 +45,18 @@ function establecerEventos(){
 	    modal.style.display = "none";
 	    modalHistoricoAbierto = false;
 	}
+
+	window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        modalHistoricoAbierto = false;
+    }
+}
 }
 
 app.controller("giv2railController", [ '$scope', 'leafletData', '$window', function($scope, $window, leafletData) {
+	$scope.date1 = new Date();
+    $scope.date2 = new Date();
 	$scope.marcadoresHistorico = new Array();
 	$scope.patron = new RegExp('')
 	establecerEventos();
@@ -57,7 +66,9 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	      "Fecha"
 	    ],
 	    seleccion: "ID tren",
-	    inputBusqueda: ""
+	    inputBusqueda: "",
+	    desde: "",
+	    hasta: ""
     };
 	$scope.markers = new Array();
 	marcador = {
@@ -102,6 +113,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	           	 {
 	           	 	ultimoActualizadoTrenes[contenido.idtren] = -1;
 	           	 	marcador = {
+	           	 		group: contenido.idtren,
 		                lat: contenido.latitud,
 		                lng: contenido.longitud,
 		                focus: true,
@@ -206,6 +218,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     $scope.buscarHistorico = function(){
     	if($scope.data.seleccion === "ID tren")
     	{
+    		$scope.markers = new Array();
     		var id = $scope.data.inputBusqueda;
     		$.ajax({
                     type: "POST",
@@ -214,11 +227,96 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     dataType:'json',
                     data: JSON.stringify({ "idtren" : id}),
                     success: function(data){
-                        $.each(data, function(i, item) {
-                          console.log(data[i].posicion.latitud);
+                    	console.log(data.noHay);
+                    	if(data.noHay == true)
+                    	{
+                    		alert("No hay posiciones para dicho ID");
+                    	}
+                    	else
+                    	{
+	                    	$.each(data, function(i, item) {
+	                          console.log(data[i].latitud);
+	                          	marcador = {
+	                          		group: "queryIDTren",
+					                lat: data[i].latitud,
+					                lng: data[i].longitud,
+					                focus: true,
+			                        title: "Tren",
+			                        draggable: true,
+			                        label: {
+			                            message: "El tren está aquí " + new Date().toUTCString(),
+			                            options: {
+			                                noHide: false
+			                            }
+			                        },
+			                        icon: {
+			                        	iconUrl: arrayIconos[4],
+					                    iconSize:     [38, 38], // tamano del icono
+					                    iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
+					                    popupAnchor:  [-3, -76] // punto relativo a donde el popup debería abrirse
+			                        }
+			           			};
+				            $scope.marcadoresHistorico.push(marcador);
+				            $scope.markers.push(marcador);
+				            if(i+1 == data.length)
+				            {
+				            	$scope.center.lat = data[i].latitud;
+		         				$scope.center.lng = data[i].longitud;
+		         				$scope.center.zoom = 15;
+				            }
+				            $scope.$apply();
+							});
+                    	}
+
+                    },
+                    beforeSend:function()
+                    {
+                        
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Ha ocurrido un error al obtener el tren.");
+                        var err = eval("(" + xhr.responseText + ")");
+                        alert(error.Message);
+                    },
+                    async: true
+			});
+    	}
+    	else
+    	{
+    		//console.log(str($scope.date1));
+    		var desde, hasta;
+    		desde = $scope.date1;
+    		hasta = $scope.date2;
+    		if($scope.date1 instanceof Date)
+    		{
+    			desde = desde.format("yyyy-mm-dd HH:MM:ss");
+    			console.log(desde);
+    		}
+    		if($scope.date2 instanceof Date)
+    		{
+    			hasta = hasta.format("yyyy-mm-dd HH:MM:ss");
+    			console.log(hasta);
+    		}
+
+			$.ajax({
+                type: "POST",
+                url: "trenesFecha",
+                contentType: "application/json",
+                dataType:'json',
+                data: JSON.stringify({ "desde" : desde, "hasta" : hasta}),
+                success: function(data){
+                    if(data.noHay == true)
+                	{
+                		alert("No hay posiciones entre esas fechas.");
+                	}
+                	else
+                	{
+                    	$.each(data, function(i, item) {
+                          console.log(data[i].latitud);
                           	marcador = {
-				                lat: data[i].posicion.latitud,
-				                lng: data[i].posicion.longitud,
+                          		group: "queryFecha",
+				                lat: data[i].latitud,
+				                lng: data[i].longitud,
 				                focus: true,
 		                        title: "Tren",
 		                        draggable: true,
@@ -237,53 +335,59 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 		           			};
 			            $scope.marcadoresHistorico.push(marcador);
 			            $scope.markers.push(marcador);
+			            if(i+1 == data.length)
+			            {
+			            	$scope.center.lat = data[i].latitud;
+	         				$scope.center.lng = data[i].longitud;
+	         				$scope.center.zoom = 15;
+			            }
 			            $scope.$apply();
 						});
+                	}
 
-                    },
-                    beforeSend:function()
-                    {
-                        $("#botonActualizarObjeto").html("Actualizando...");
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Ha ocurrido un error al obtener el tren.");
-                        var err = eval("(" + xhr.responseText + ")");
-                        alert(err.Message);
-                    },
-                    async: true
+                },
+                beforeSend:function()
+                {
+
+                },
+                error: function(xhr, status, error) {
+                    console.log("Ha ocurrido un error al obtener los trenes en esa fecha.");
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(error.Message);
+                },
+                async: true
 			});
     	}
-    	else
-    	{
-    		if(/^(\d{2})\/(\d{2})\/(\d{4})$/.test($scope.data.inputBusqueda))
-    		{
-    			console.log("Correcto");
-    			$.ajax({
-                    type: "POST",
-                    url: "trenesFecha",
-                    contentType: "application/json",
-                    dataType:'json',
-                    data: JSON.stringify({ "idtren" : $scope.data.inputBusqueda}),
-                    success: function(data){
-                        console.log("Correcto");
-
-                    },
-                    beforeSend:function()
-                    {
-
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Ha ocurrido un error al obtener los trenes en esa fecha.");
-                        var err = eval("(" + xhr.responseText + ")");
-                        alert(err.Message);
-                    },
-                    async: true
-				});
-    		}
-    		else
-    		{
-    			alert("ERROR: El formato de fecha es incorrecto");
-    		}
-    	}
     }
-}]);
+}]).directive('timepicker', [
+
+  function() {
+    var link;
+    link = function(scope, element, attr, ngModel) {
+        //console.log(ngModel);
+        element = $(element);
+        element.datetimepicker({
+        	ignoreReadonly : true,
+        	showTodayButton : true,
+        	sideBySide: true,
+        	locale: 'es',
+            format: 'YYYY-MM-DD HH:mm:ss',
+          	defaultDate: scope.date,
+      	});
+        element.on('dp.change', function(event) {
+            scope.$apply(function() {
+                ngModel.$setViewValue(event.date._d);
+            });
+        });
+    };
+
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      scope: {
+      	date: '=ngModel'
+      },
+      link: link
+    };
+  }
+]);

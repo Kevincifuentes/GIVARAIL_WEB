@@ -6,16 +6,24 @@
     <link rel="stylesheet" href="css/leaflet.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="css/leaflet.label.css">
     <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="js/node_modules/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="js/node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    
+    <script src="js/angular.min.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/leaflet.js"></script>
     <script src="js/leaflet.label.js"></script>
-  	<script src="js/angular.min.js"></script>
   	<script src="js/angular-leaflet-directive.min.js"></script>
     <script src='js/app.js'></script>
+    <script src="js/moment-with-locales.min.js"></script>
     <script src="js/stomp.js"></script>
-    <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/date.format.js"></script>
+     <script src="js/node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <!--<script src="js/giv2rail.js"></script>-->
     <title>GIV2RAIL</title>
   </head>
@@ -44,9 +52,20 @@
         <ng-form name="exampleForm">
           <label>Buscar por: </label>
           <select ng-model="data.seleccion" ng-change="" ng-options="opcion for opcion in data.opcionesBusqueda"></select>
-          <input type="text" name="busqueda" ng-model="data.inputBusqueda" ng-pattern="comprobarBusqueda()" placeholder="Utilizar dd/mm/yyyy o ID" required>
+          <input type="text" name="busqueda" ng-model="data.inputBusqueda" ng-show="data.seleccion=='ID tren'" ng-pattern="comprobarBusqueda()" placeholder="ID" required>
           <button ng-click="buscarHistorico()">Buscar</button>
           <small class="error" ng-show="exampleForm.busqueda.$error.pattern">Patrón invalido</small>
+          <br>
+          <label ng-show="data.seleccion=='Fecha'">Desde: </label>
+          <div ng-show="data.seleccion=='Fecha'" class='input-group date' timepicker ng-model="date1">
+            <input type='text' readonly="readonly" class="form-control" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+          </div>
+          <label ng-show="data.seleccion=='Fecha'">Hasta: </label>
+          <div ng-show="data.seleccion=='Fecha'" class='input-group date' timepicker ng-model="date2">
+            <input type='text' readonly="readonly" class="form-control" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+          </div>
         </ng-form>
       </div>
       <div class="modal-footer">

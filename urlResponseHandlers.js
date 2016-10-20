@@ -42,32 +42,48 @@ function obtenerTrenCodigo(res, req){
     req.on('end', function () {
         var jsonObj = JSON.parse(body);
         // Utilizar jsonObj.idtren para obtener el ID del tren enviado
-        res.writeHead(200, {"Content-Type": "application/json"});
-        var pruebaPos = [{posicion: {latitud : 40.4168, longitud : -3.7038}}, {posicion: {latitud : 41.3851, longitud : 2.1734}}];
+        
         pool.connect(function(err, client, done) {
-                  if(err) {
-                    return console.error('Error al obtener un cliente de la "piscina"', err);
-                  }
-                  client.query("SELECT * FROM Posiciones WHERE id_tren='"+jsonObj.idtren+"'", function(err, result) {
-                    //call `done()` to release the client back to the pool
-                    res.write(JSON.stringify(results.rows));
-                    res.end();
-                    console.log("Respuesta dada");
-                    done();
+          if(err) {
+            return console.error('Error al obtener un cliente de la "piscina"', err);
+          }
+          const results = [];
+          const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1)", [jsonObj.idtren]);
+          //call `done()` to release the client back to the pool
 
-                    if(err) {
-                      return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
-                    }
-                  });
+          query.on('row', (row) => {
+            results.push(row);
+          });
+          // After all data is returned, close connection and return results
+          query.on('end', function() {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            if(results.length == 0)
+            {
+                var nohay = {'noHay' : true};
+                res.write(JSON.stringify(nohay)); 
+            }
+            else
+            {
+                console.log(results);
+                res.write(JSON.stringify(results)); 
+            }
+            res.end();
+            console.log("Respuesta dada");
+            done();
+          });
+
+          if(err) {
+            return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
+          }
                   
-                });
+        });
         
     });
 
 
 }
 
-function obtenerTrenesFecha(res){
+function obtenerTrenesFecha(res, req){
     console.log("SE HA LLAMADO A OBTENER TRENES CON FECHA");
     var body = "";
     req.on('data', function (chunk) {
@@ -76,12 +92,44 @@ function obtenerTrenesFecha(res){
     req.on('end', function () {
         var jsonObj = JSON.parse(body);
         // Utilizar jsonObj.fecha para obtener la fecha
-        console.log(jsonObj.fecha);
-        res.writeHead(200, {"Content-Type": "application/json"});
-        var pruebaPos = [{posicion: {latitud : 40.4168, longitud : -3.7038}}, {posicion: {latitud : 41.3851, longitud : 2.1734}}];
-        res.write(JSON.stringify(pruebaPos));
-        res.end();
-        console.log("Respuesta dada");
+        var desde = jsonObj.desde+".00";
+        var hasta = jsonObj.hasta+".00";
+        console.log(desde);
+        console.log(hasta);
+        pool.connect(function(err, client, done) {
+          if(err) {
+            return console.error('Error al obtener un cliente de la "piscina"', err);
+          }
+          const results = [];
+          const query = client.query("SELECT * FROM Posiciones WHERE momento BETWEEN ($1)::timestamp AND ($2)::timestamp;", [desde, hasta]);
+          //call `done()` to release the client back to the pool
+          console.log(query);
+          query.on('row', (row) => {
+            results.push(row);
+          });
+          // After all data is returned, close connection and return results
+          query.on('end', function() {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            if(results.length == 0)
+            {
+                var nohay = {'noHay' : true};
+                res.write(JSON.stringify(nohay)); 
+            }
+            else
+            {
+                console.log(results);
+                res.write(JSON.stringify(results)); 
+            }
+            res.end();
+            console.log("Respuesta dada");
+            done();
+          });
+
+          if(err) {
+            return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
+          }        
+        });
+        
     });
 }
 

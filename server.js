@@ -50,8 +50,8 @@ function start(dispatch, handlers)
 				  }
 				  client.query('INSERT INTO Posiciones(latitud, longitud, id_trenasoc) values($1, $2, $3)',
     				   [jsonObj.latitud, jsonObj.longitud, jsonObj.idtren]);
-
-				  client.query("SELECT * FROM Trenes WHERE id_tren='tren1'", function(err, result) {
+				  //console.log("añadido");
+				  /*client.query("SELECT * FROM Trenes WHERE id_tren='tren1'", function(err, result) {
 				    //call `done()` to release the client back to the pool
 				    console.log(result.rowCount);
 				    done();
@@ -60,7 +60,8 @@ function start(dispatch, handlers)
 				      return console.error('Error al realizar la inserción de una posición', err);
 				    }
 				    //output: 1
-				  });
+				  });*/
+				  
 				});
 		    });
 

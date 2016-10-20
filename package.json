@@ -2,8 +2,9 @@
   "name": "proyecto",
   "version": "0.0.1",
   "dependencies": {
-    "ejs": "2.3.4",
+    "angular-bootstrap-datetimepicker": "^1.1.2",
     "angular-socialshare": "^0.1.19",
+    "ejs": "2.3.4",
     "mongodb": "2.0.49"
   },
   "engines": {

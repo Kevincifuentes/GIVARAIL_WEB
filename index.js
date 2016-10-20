@@ -12,6 +12,7 @@ var handle = {};
 handle["/"] = urlResponseHandlers.index;
 handle["/index"] = urlResponseHandlers.index;
 handle["/idtren"] = urlResponseHandlers.obtenerTrenCodigo;
+handle["/trenesFecha"] = urlResponseHandlers.obtenerTrenesFecha;
 
 server.start(controller.dispatch, handle);
 
