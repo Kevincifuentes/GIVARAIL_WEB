@@ -303,7 +303,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
        	 if(numeroMarcadoresAhora[contenido.idtren] == undefined ||numeroMarcadoresAhora[contenido.idtren] != numeroMaximoAMostrar)
        	 {
        	 	if($scope.lineas[contenido.idtren] == undefined){
-       	 		console.log("undefined");
+       	 		console.log("undefined lineas");
        	 		$scope.lineas[contenido.idtren] = {
 			        type: "polyline",
 			        latlngs: []
@@ -341,6 +341,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
        	 	$scope.lineas[contenido.idtren].latlngs.push({ lat: contenido.latitud, lng: contenido.longitud });
        	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lat = contenido.latitud;
        	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lng = contenido.longitud;
+       	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].focus = true;
        	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].icon = {
                 	iconUrl: arrayIconos[4],
                     iconSize:     [38, 38], // tamano del icono
@@ -354,6 +355,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
            	 		todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
+           	 		todosMarcadores[contenido.idtren][4].focus = false;
+           	 		todosMarcadores[contenido.idtren][3].focus = false;
+           	 		todosMarcadores[contenido.idtren][2].focus = false;
+           	 		todosMarcadores[contenido.idtren][1].focus = false;
            	 		ultimoActualizadoTrenes[contenido.idtren]++;
 			        break;
 			    case 1:
@@ -361,6 +366,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
            	 		todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+           	 		todosMarcadores[contenido.idtren][4].focus = false;
+           	 		todosMarcadores[contenido.idtren][3].focus = false;
+           	 		todosMarcadores[contenido.idtren][2].focus = false;
+           	 		todosMarcadores[contenido.idtren][0].focus = false;
 			        ultimoActualizadoTrenes[contenido.idtren]++;
 			        break;
 			    case 2:
@@ -368,6 +377,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
            	 		todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+           	 		todosMarcadores[contenido.idtren][4].focus = false;
+           	 		todosMarcadores[contenido.idtren][3].focus = false;
+           	 		todosMarcadores[contenido.idtren][1].focus = false;
+           	 		todosMarcadores[contenido.idtren][0].focus = false;
 			        ultimoActualizadoTrenes[contenido.idtren]++;
 			        break;
 			    case 3:
@@ -375,6 +388,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
            	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
+           	 		todosMarcadores[contenido.idtren][2].focus = false;
+           	 		todosMarcadores[contenido.idtren][1].focus = false;
+           	 		todosMarcadores[contenido.idtren][0].focus = false;
+           	 		todosMarcadores[contenido.idtren][4].focus = false;
            	 		ultimoActualizadoTrenes[contenido.idtren]++;
 			        break;
 			    case 4:
@@ -382,6 +399,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
            	 		todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
            	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+           	 		todosMarcadores[contenido.idtren][3].focus = false;
+           	 		todosMarcadores[contenido.idtren][2].focus = false;
+           	 		todosMarcadores[contenido.idtren][1].focus = false;
+           	 		todosMarcadores[contenido.idtren][0].focus = false;
            	 		ultimoActualizadoTrenes[contenido.idtren] = -1;
 			}
        	 }
