@@ -15,7 +15,8 @@ function handleStatic(pageUrl, response)
 	fs.exists(filename, function(exists) {
 		if(!exists) {
 			console.log("No existe: " + filename);
-			response.writeHead(200, {'Content-Type': 'text/html'});;
+			response.writeHead(404, {'Content-Type': 'text/html'});;
+			response.end();
 			return;
 		}
 		response.writeHead(200);

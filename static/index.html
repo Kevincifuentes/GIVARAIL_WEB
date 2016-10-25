@@ -29,12 +29,12 @@
   </head>
   <body ng-controller="giv2railController" style="width:100%; height:100%;  margin: 0px; padding: 0px;">
         <div id="sombra">
-           <img id="tiempoReal" title="Tiempo Real" src="img/realtime.png"/>
+           <img id="tiempoReal" ng-click="activarTiempoReal()" title="Tiempo Real" src="img/realtime.png"/>
            <img id="historico" title="Histórico" src="img/historico.png"/>
           </div>
-          <leaflet markers="markers" center="center" style="width:100%; height:100%"></leaflet>
+          <leaflet paths="lineas" defaults="defaults" markers="markers" center="center" style="width:100%; height:100%"></leaflet>
           <div id="divPowered" style="position:absolute;bottom:15px;right:5px; z-index: 998;">
-            <label>Patrocinado por </label>
+            <label>Powered by </label>
             <img src="img/caf.png" style="width:130px;">
             <img src="img/deustotech.png" style="width:130px;">
           </div>
