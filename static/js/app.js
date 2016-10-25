@@ -100,7 +100,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	marcador = {
 	                lat: 43.046514,
 	                lng: -2.207363,
-	                focus: true,
+	                focus: false,
                     title: "Tren",
                     draggable: true,
                     message: "El tren está aquí",
@@ -316,7 +316,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
        	 		group: contenido.idtren,
                 lat: contenido.latitud,
                 lng: contenido.longitud,
-                focus: true,
+                focus: false,
                 title: "Tren",
                 draggable: true,
                 message: "El tren está aquí" + numeroMarcadoresAhora[contenido.idtren] +" "+ new Date().toUTCString(),
@@ -324,7 +324,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                 	iconUrl: arrayIconos[4],
                     iconSize:     [38, 38], // tamano del icono
                     iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
-                    popupAnchor:  [2, -38] // punto relativo a donde el popup debería abrirse
+                	popupAnchor:  [2, -38] 
                 }
             };
             todosMarcadores[contenido.idtren].push(marcador);
@@ -346,9 +346,15 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                 	iconUrl: arrayIconos[4],
                     iconSize:     [38, 38], // tamano del icono
                     iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
-                    popupAnchor:  [2, -38] // punto relativo a donde el popup debería abrirse
+                  	popupAnchor:  [2, -38] 
             };
        	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].message = "El tren está aquí "+ new Date().toUTCString();
+       	 	if(primeraVez === true)
+	       	{
+		       	primeraVez = false;
+		       	$scope.center.lat = contenido.latitud;
+		        $scope.center.lng = contenido.longitud;
+	       	}
        	 	switch(ultimoActualizadoTrenes[contenido.idtren]+1) {
 			    case 0:
 			        todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
@@ -405,17 +411,11 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
            	 		todosMarcadores[contenido.idtren][0].focus = false;
            	 		ultimoActualizadoTrenes[contenido.idtren] = -1;
 			}
+			$scope.$apply();
        	 }
-       	 if(primeraVez === true)
-       	 {
-       	 	primeraVez = false;
-       	 	$scope.center.lat = contenido.latitud;
-         	$scope.center.lng = contenido.longitud;
-       	 }
-       	 $scope.$apply();
+       	 
 	}
-	}
-}]).directive('timepicker', [
+}}]).directive('timepicker', [
 
   function() {
     var link;
