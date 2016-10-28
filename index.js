@@ -9,10 +9,14 @@ var urlResponseHandlers = require("./urlResponseHandlers");
 
 var handle = {};
   
-handle["/"] = urlResponseHandlers.index;
+handle["/"] = urlResponseHandlers.autenticar;
 handle["/index"] = urlResponseHandlers.index;
 handle["/idtren"] = urlResponseHandlers.obtenerTrenCodigo;
 handle["/trenesFecha"] = urlResponseHandlers.obtenerTrenesFecha;
+handle["/posicion"] = urlResponseHandlers.anadirPosicion;
+handle["/registrar"] = urlResponseHandlers.registrarCliente;
+handle["/autenticar"] = urlResponseHandlers.autenticar;
+
 
 server.start(controller.dispatch, handle);
 

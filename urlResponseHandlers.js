@@ -19,7 +19,7 @@ var config = {
 };
 
 var pool = new pg.Pool(config);
-
+var conexionesCliente = [];
 
 function index(res) {
 	console.log("SE HA LLAMADO A INDEX");
@@ -133,7 +133,65 @@ function obtenerTrenesFecha(res, req){
     });
 }
 
+function anadirPosicion(res, req){
+    console.log("SE HA LLAMADO A ANADIRPOSICION");
+    var body = "";
+    req.on('data', function (chunk) {
+            body += chunk;
+    });
+    req.on('end', function () {
+        var jsonObj = JSON.parse(body);
+        // Utilizar jsonObj.fecha para obtener la fecha
+        conexionesCliente.forEach(function(resp) {
+            var d = new Date();
+            resp.write('id: ' + d.getMilliseconds() + '\n');
+            resp.write('data:' + body +   '\n\n');
+        });
+        pool.connect(function(err, client, done) {
+              if(err) {
+                return console.error('Error al obtener un cliente de la "piscina"', err);
+              }
+              client.query('INSERT INTO Posiciones(latitud, longitud, id_trenasoc) values($1, $2, $3)',
+                   [jsonObj.latitud, jsonObj.longitud, jsonObj.idtren]);
+              console.log("añadido");
+              done();
+        });
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end();
+    });
+}
+
+function registrarCliente(res, req){
+    console.log("SE HA LLAMADO A REGITRARCLIENTE");
+    req.socket.setTimeout(Number.MAX_VALUE);
+ 
+    // send headers for event-stream connection
+    // see spec for more information
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
+    res.write('\n');
+
+    conexionesCliente.push(res);
+
+    req.on("close", function() {
+        var toRemove;
+        for (var j =0 ; j < conexionesCliente.length ; j++) {
+            if (conexionesCliente[j] == res) {
+                toRemove =j;
+                break;
+            }
+        }
+        conexionesCliente.splice(j,1);
+        console.log(conexionesCliente.length);
+    });
+}
+
 
 exports.index = index;
 exports.obtenerTrenCodigo = obtenerTrenCodigo;
 exports.obtenerTrenesFecha = obtenerTrenesFecha;
+exports.anadirPosicion = anadirPosicion;
+exports.registrarCliente = registrarCliente;

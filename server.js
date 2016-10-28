@@ -9,7 +9,7 @@ var http = require('http'),
 	pg = require('pg'),
     url = require('url');
 
-var config = {
+/*var config = {
   user: 'kevin', //env var: PGUSER
   database: 'giv2rail', //env var: PGDATABASE
   password: 'kevin', //env var: PGPASSWORD
@@ -17,25 +17,25 @@ var config = {
   port: 5432, //env var: PGPORT
   max: 10, // max number of clients in the pool
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
-};
+};*/
 
-var pool = new pg.Pool(config);
+//var pool = new pg.Pool(config);
 
-var destino = '/topic/jms.topic.test';
-var cliente;
+/*var destino = '/topic/jms.topic.test';
+var cliente;*/
 
 function start(dispatch, handlers)
 {
-	if(cluster.isMaster)
-	{
+	/*if(cluster.isMaster)
+	{*/
 		http.createServer(function(req, res) {
 		var _url = url.parse(req.url).pathname;
 		dispatch(handlers, _url, req, res);
 		}).listen(8888);
 		console.log("Server started !! ");
-		cluster.fork();
+		//cluster.fork();
 
-	}
+	/*}
 	else
 	{
 		client = new Stomp('130.206.138.15', 61613, '','');
@@ -60,18 +60,18 @@ function start(dispatch, handlers)
 				      return console.error('Error al realizar la inserción de una posición', err);
 				    }
 				    //output: 1
-				  });*/
+				  });
 				  
 				});
 		    });
 
 		    //client.publish(destination, 'Oh herrow');
 		});
-	}
+	}*/
 }
 
-pool.on('error', function (err, client) {
+/*pool.on('error', function (err, client) {
   console.error('Error en el cliente en standby', err.message, err.stack)
-});
+});*/
 
 exports.start = start;

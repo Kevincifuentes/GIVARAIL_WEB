@@ -17,6 +17,8 @@ var arrayIconos = ["img/icontrainb0.png", "img/icontrainb25.png", "img/icontrain
 var client;
 var conectadoStomp = false;
 var suscripcion;
+var fuentePosiciones;
+
 function establecerEventos(){
 		// Coge el modal
 	var modal = document.getElementById('historicoModal');
@@ -55,6 +57,132 @@ function establecerEventos(){
     }
 }
 }
+
+function prepararSucripcion($scope)
+{
+  var onMessage = function (msg) {
+    console.log(msg);
+         var contenido = JSON.parse(msg.data);
+         // HABRÍA QUE OBTENER EL ID DE CADA TREN Y MIRAR SI YA HAY MARCADORES Y SI NO AÑADIR
+         if(numeroMarcadoresAhora[contenido.idtren] == undefined ||numeroMarcadoresAhora[contenido.idtren] != numeroMaximoAMostrar)
+         {
+          if($scope.lineas[contenido.idtren] == undefined){
+            console.log("undefined lineas");
+            $scope.lineas[contenido.idtren] = {
+              type: "polyline",
+              latlngs: []
+            }
+          }
+          $scope.lineas[contenido.idtren].latlngs.push({ lat: contenido.latitud, lng: contenido.longitud });
+
+          ultimoActualizadoTrenes[contenido.idtren] = -1;
+          marcador = {
+            group: contenido.idtren,
+                lat: contenido.latitud,
+                lng: contenido.longitud,
+                focus: false,
+                title: "Tren",
+                draggable: true,
+                message: "El tren está aquí" + numeroMarcadoresAhora[contenido.idtren] +" "+ new Date().toUTCString(),
+                icon: {
+                  iconUrl: arrayIconos[4],
+                    iconSize:     [38, 38], // tamano del icono
+                    iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
+                  popupAnchor:  [2, -38] 
+                }
+            };
+            todosMarcadores[contenido.idtren].push(marcador);
+            $scope.markers.push(marcador);
+            $scope.$apply();
+            if(numeroMarcadoresAhora[contenido.idtren] == undefined)
+            {
+              numeroMarcadoresAhora[contenido.idtren] =0;
+            }
+            numeroMarcadoresAhora[contenido.idtren]++;
+         }
+         else
+         {
+            $scope.lineas[contenido.idtren].latlngs.push({ lat: contenido.latitud, lng: contenido.longitud });
+            todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lat = contenido.latitud;
+            todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lng = contenido.longitud;
+            todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].focus = true;
+            todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].icon = {
+                    iconUrl: arrayIconos[4],
+                      iconSize:     [38, 38], // tamano del icono
+                      iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
+                      popupAnchor:  [2, -38] 
+              };
+            todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].message = "El tren está aquí "+ new Date().toUTCString();
+            if(primeraVez === true)
+            {
+              primeraVez = false;
+              $scope.center.lat = contenido.latitud;
+              $scope.center.lng = contenido.longitud;
+            }
+            switch(ultimoActualizadoTrenes[contenido.idtren]+1) {
+            case 0:
+                todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][4].focus = false;
+                  todosMarcadores[contenido.idtren][3].focus = false;
+                  todosMarcadores[contenido.idtren][2].focus = false;
+                  todosMarcadores[contenido.idtren][1].focus = false;
+                  ultimoActualizadoTrenes[contenido.idtren]++;
+                break;
+            case 1:
+              todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][4].focus = false;
+                  todosMarcadores[contenido.idtren][3].focus = false;
+                  todosMarcadores[contenido.idtren][2].focus = false;
+                  todosMarcadores[contenido.idtren][0].focus = false;
+                ultimoActualizadoTrenes[contenido.idtren]++;
+                break;
+            case 2:
+              todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][4].focus = false;
+                  todosMarcadores[contenido.idtren][3].focus = false;
+                  todosMarcadores[contenido.idtren][1].focus = false;
+                  todosMarcadores[contenido.idtren][0].focus = false;
+                ultimoActualizadoTrenes[contenido.idtren]++;
+                break;
+            case 3:
+                todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][2].focus = false;
+                  todosMarcadores[contenido.idtren][1].focus = false;
+                  todosMarcadores[contenido.idtren][0].focus = false;
+                  todosMarcadores[contenido.idtren][4].focus = false;
+                  ultimoActualizadoTrenes[contenido.idtren]++;
+                break;
+            case 4:
+              todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
+                  todosMarcadores[contenido.idtren][3].focus = false;
+                  todosMarcadores[contenido.idtren][2].focus = false;
+                  todosMarcadores[contenido.idtren][1].focus = false;
+                  todosMarcadores[contenido.idtren][0].focus = false;
+                  ultimoActualizadoTrenes[contenido.idtren] = -1;
+            }
+            $scope.$apply();
+        }
+    }
+  fuentePosiciones = new EventSource('/registrar');
+  fuentePosiciones.addEventListener('message', onMessage, false);
+  suscrito = true;
+}
+
 
 app.controller("giv2railController", [ '$scope', 'leafletData', '$window', function($scope, $window, leafletData) {
 	$scope.icons = {
@@ -111,9 +239,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	todosMarcadores["tren1"] = new Array();
 	todosMarcadores["tren1"].push(marcador);
 	$scope.markers.push(marcador);
-	client = Stomp.client( "ws://dev.mobility.deustotech.eu:61614", "v11.stomp" );
-	client.connect( "", "",function() { suscripcion=client.subscribe("/topic/jms.topic.test",$scope.onMessage),{ priority: 9 }});
-	suscritoStomp = true;
+  prepararSucripcion($scope);
+
     angular.extend($scope, $scope.markers,{
     	center: {
             lat: 43.046514,
@@ -140,10 +267,9 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     }
     $scope.activarTiempoReal = function(){
     	$scope.markers = new Array();
-    	if(suscritoStomp == false)
+    	if(suscrito == false)
     	{
-    		suscripcion = client.subscribe("/topic/jms.topic.test",$scope.onMessage);
-    		suscritoStomp = true;
+    		prepararSucripcion($scope);
     		primeraVez = true;
     		numeroMarcadoresAhora = [];
     	}
@@ -153,8 +279,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     }
 
     $scope.buscarHistorico = function(){
-    	suscripcion.unsubscribe();
-    	suscritoStomp = false;
+    	fuentePosiciones.close();
+    	suscrito = false;
     	if($scope.data.seleccion === "ID tren")
     	{
     		$scope.markers = new Array();
@@ -290,132 +416,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 			});
     	}
     }
-    $scope.onMessage = function(message){
-		//console.log(message);
-	   var lineas = message.toString().split("\n");
-   	   var contador = 0;
-   	   while (!lineas[contador].startsWith("type")){contador++;}
-   	   var tipo = lineas[contador].substring(lineas[contador].indexOf(":") + 1, lineas[contador].length);
-   	   while (!lineas[contador].startsWith('{"latitud"')){contador++;}
-       if(tipo === "posicion"){
-       	 var contenido = JSON.parse(lineas[contador]);
-       	 //	HABRÍA QUE OBTENER EL ID DE CADA TREN Y MIRAR SI YA HAY MARCADORES Y SI NO AÑADIR
-       	 if(numeroMarcadoresAhora[contenido.idtren] == undefined ||numeroMarcadoresAhora[contenido.idtren] != numeroMaximoAMostrar)
-       	 {
-       	 	if($scope.lineas[contenido.idtren] == undefined){
-       	 		console.log("undefined lineas");
-       	 		$scope.lineas[contenido.idtren] = {
-			        type: "polyline",
-			        latlngs: []
-			    }
-       	 	}
-       	 	$scope.lineas[contenido.idtren].latlngs.push({ lat: contenido.latitud, lng: contenido.longitud });
-
-       	 	ultimoActualizadoTrenes[contenido.idtren] = -1;
-       	 	marcador = {
-       	 		group: contenido.idtren,
-                lat: contenido.latitud,
-                lng: contenido.longitud,
-                focus: false,
-                title: "Tren",
-                draggable: true,
-                message: "El tren está aquí" + numeroMarcadoresAhora[contenido.idtren] +" "+ new Date().toUTCString(),
-                icon: {
-                	iconUrl: arrayIconos[4],
-                    iconSize:     [38, 38], // tamano del icono
-                    iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
-                	popupAnchor:  [2, -38] 
-                }
-            };
-            todosMarcadores[contenido.idtren].push(marcador);
-            $scope.markers.push(marcador);
-            $scope.$apply();
-            if(numeroMarcadoresAhora[contenido.idtren] == undefined)
-            {
-            	numeroMarcadoresAhora[contenido.idtren] =0;
-            }
-            numeroMarcadoresAhora[contenido.idtren]++;
-       	 }
-       	 else
-       	 {
-       	 	$scope.lineas[contenido.idtren].latlngs.push({ lat: contenido.latitud, lng: contenido.longitud });
-       	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lat = contenido.latitud;
-       	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lng = contenido.longitud;
-       	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].focus = true;
-       	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].icon = {
-                	iconUrl: arrayIconos[4],
-                    iconSize:     [38, 38], // tamano del icono
-                    iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
-                  	popupAnchor:  [2, -38] 
-            };
-       	 	todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].message = "El tren está aquí "+ new Date().toUTCString();
-       	 	if(primeraVez === true)
-	       	{
-		       	primeraVez = false;
-		       	$scope.center.lat = contenido.latitud;
-		        $scope.center.lng = contenido.longitud;
-	       	}
-       	 	switch(ultimoActualizadoTrenes[contenido.idtren]+1) {
-			    case 0:
-			        todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][4].focus = false;
-           	 		todosMarcadores[contenido.idtren][3].focus = false;
-           	 		todosMarcadores[contenido.idtren][2].focus = false;
-           	 		todosMarcadores[contenido.idtren][1].focus = false;
-           	 		ultimoActualizadoTrenes[contenido.idtren]++;
-			        break;
-			    case 1:
-			    	todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][4].focus = false;
-           	 		todosMarcadores[contenido.idtren][3].focus = false;
-           	 		todosMarcadores[contenido.idtren][2].focus = false;
-           	 		todosMarcadores[contenido.idtren][0].focus = false;
-			        ultimoActualizadoTrenes[contenido.idtren]++;
-			        break;
-			    case 2:
-			    	todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][4].focus = false;
-           	 		todosMarcadores[contenido.idtren][3].focus = false;
-           	 		todosMarcadores[contenido.idtren][1].focus = false;
-           	 		todosMarcadores[contenido.idtren][0].focus = false;
-			        ultimoActualizadoTrenes[contenido.idtren]++;
-			        break;
-			    case 3:
-			        todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][4].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][2].focus = false;
-           	 		todosMarcadores[contenido.idtren][1].focus = false;
-           	 		todosMarcadores[contenido.idtren][0].focus = false;
-           	 		todosMarcadores[contenido.idtren][4].focus = false;
-           	 		ultimoActualizadoTrenes[contenido.idtren]++;
-			        break;
-			    case 4:
-			    	todosMarcadores[contenido.idtren][3].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][2].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][1].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][0].icon = $scope.icons.black;
-           	 		todosMarcadores[contenido.idtren][3].focus = false;
-           	 		todosMarcadores[contenido.idtren][2].focus = false;
-           	 		todosMarcadores[contenido.idtren][1].focus = false;
-           	 		todosMarcadores[contenido.idtren][0].focus = false;
-           	 		ultimoActualizadoTrenes[contenido.idtren] = -1;
-			}
-			$scope.$apply();
-       	 }
-       	 
-	}
-}}]).directive('timepicker', [
+    
+}]).directive('timepicker', [
 
   function() {
     var link;
