@@ -9,10 +9,14 @@ var urlResponseHandlers = require("./urlResponseHandlers");
 
 var handle = {};
   
-handle["/"] = urlResponseHandlers.autenticar;
+handle["/"] = urlResponseHandlers.index;
 handle["/index"] = urlResponseHandlers.index;
 handle["/idtren"] = urlResponseHandlers.obtenerTrenCodigo;
+handle["/idtrenCSV"] = urlResponseHandlers.obtenerTrenCodigoCSV;
 handle["/trenesFecha"] = urlResponseHandlers.obtenerTrenesFecha;
+handle["/trenesFechaCSV"] = urlResponseHandlers.obtenerTrenesFechaCSV;
+handle["/trenesIDFecha"] = urlResponseHandlers.obtenerTrenesCodigoFecha;
+handle["/trenesIDFechaCSV"] = urlResponseHandlers.obtenerTrenesCodigoFechaCSV;
 handle["/posicion"] = urlResponseHandlers.anadirPosicion;
 handle["/registrar"] = urlResponseHandlers.registrarCliente;
 handle["/autenticar"] = urlResponseHandlers.autenticar;

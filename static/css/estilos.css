@@ -670,5 +670,7 @@
     background-color: #000000;
 }
 
+.loading { border:1px solid #ddd; padding:20px; margin:40px 5px; width:80px;}
+
 
 

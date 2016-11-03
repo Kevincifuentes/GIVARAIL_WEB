@@ -40,7 +40,8 @@ function obtenerTrenCodigo(res, req){
             body += chunk;
     });
     req.on('end', function () {
-        var jsonObj = JSON.parse(body);
+        var query = url.parse(req.url).query;
+        var jsonObj = JSON.parse(decodeURIComponent(query));
         // Utilizar jsonObj.idtren para obtener el ID del tren enviado
         
         pool.connect(function(err, client, done) {
@@ -83,6 +84,73 @@ function obtenerTrenCodigo(res, req){
 
 }
 
+function obtenerTrenCodigoCSV(res, req){
+    console.log("SE HA LLAMADO A DESCARGAR INFORMACION DE TREN CON CODIGO");
+    var body = "";
+    req.on('data', function (chunk) {
+            body += chunk;
+    });
+    req.on('end', function () {
+        var query = url.parse(req.url).query;
+        var jsonObj = JSON.parse(decodeURIComponent(query));
+        // Utilizar jsonObj.idtren para obtener el ID del tren enviado
+        
+        pool.connect(function(err, client, done) {
+          if(err) {
+            return console.error('Error al obtener un cliente de la "piscina"', err);
+          }
+          const results = [];
+          const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1)", [jsonObj.idtren]);
+          //call `done()` to release the client back to the pool
+
+          query.on('row', (row) => {
+            results.push(row);
+          });
+          // After all data is returned, close connection and return results
+          query.on('end', function() {
+            if(results.length == 0)
+            {
+                nombreDocumento = jsonObj.idtren+"_"+new Date().toUTCString()+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
+                res.setHeader("Set-Cookie", "fileDownload=true; path=/");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader('Content-type', 'binary');
+                console.log("CSV");
+                contenido ="No hay información disponible con el id de tren "+ jsonObj.idtren;
+                res.end(contenido); 
+            }
+            else
+            {
+                nombreDocumento = jsonObj.idtren+"_"+new Date().toUTCString()+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
+                res.setHeader("Set-Cookie", "fileDownload=true; path=/");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader('Content-type', 'binary');
+                console.log("CSV");
+                contenido ="";
+                for(i =0; i<results.length; i++){
+                    contenido = contenido + results[i].latitud+","+results[i].longitud+","+results[i].momento+"\n";
+                }
+        
+                res.end(contenido);
+            }
+            console.log("Respuesta dada");
+            done();
+          });
+
+          if(err) {
+            return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
+          }
+                  
+        });
+        
+    });
+
+
+}
+
 function obtenerTrenesFecha(res, req){
     console.log("SE HA LLAMADO A OBTENER TRENES CON FECHA");
     var body = "";
@@ -90,7 +158,8 @@ function obtenerTrenesFecha(res, req){
             body += chunk;
     });
     req.on('end', function () {
-        var jsonObj = JSON.parse(body);
+        var query = url.parse(req.url).query;
+        var jsonObj = JSON.parse(decodeURIComponent(query));
         // Utilizar jsonObj.fecha para obtener la fecha
         var desde = jsonObj.desde+".00";
         var hasta = jsonObj.hasta+".00";
@@ -127,6 +196,189 @@ function obtenerTrenesFecha(res, req){
 
           if(err) {
             return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
+          }        
+        });
+        
+    });
+}
+
+function obtenerTrenesFechaCSV(res, req){
+    console.log("SE HA LLAMADO A DESCARGAR TRENES CON FECHA");
+    var body = "";
+    req.on('data', function (chunk) {
+            body += chunk;
+    });
+    req.on('end', function () {
+        var query = url.parse(req.url).query;
+        var jsonObj = JSON.parse(decodeURIComponent(query));
+        // Utilizar jsonObj.fecha para obtener la fecha
+        var desde = jsonObj.desde+".00";
+        var hasta = jsonObj.hasta+".00";
+        console.log(desde);
+        console.log(hasta);
+        pool.connect(function(err, client, done) {
+          if(err) {
+            return console.error('Error al obtener un cliente de la "piscina"', err);
+          }
+          const results = [];
+          const query = client.query("SELECT * FROM Posiciones WHERE momento BETWEEN ($1)::timestamp AND ($2)::timestamp;", [desde, hasta]);
+          //call `done()` to release the client back to the pool
+          console.log(query);
+          query.on('row', (row) => {
+            results.push(row);
+          });
+          // After all data is returned, close connection and return results
+          query.on('end', function() {
+            if(results.length == 0)
+            {
+                nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
+                res.setHeader("Set-Cookie", "fileDownload=true; path=/");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader('Content-type', 'binary');
+                console.log("CSV");
+                contenido ="No hay información disponible desde la fecha "+ desde+" hasta la fecha "+ hasta;
+                res.end(contenido); 
+            }
+            else
+            {
+                nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
+                res.setHeader("Set-Cookie", "fileDownload=true; path=/");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader('Content-type', 'binary');
+                console.log("CSV");
+                contenido ="";
+                for(i =0; i<results.length; i++){
+                    contenido = contenido + results[i].latitud+","+results[i].longitud+","+results[i].momento+"\n";
+                }
+                res.end(contenido);
+            }
+            res.end();
+            console.log("Respuesta dada");
+            done();
+          });
+
+          if(err) {
+            return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
+          }        
+        });
+        
+    });
+}
+
+function obtenerTrenesCodigoFecha(res, req){
+    console.log("SE HA LLAMADO A OBTENER TRENES CON ID y Fecha");
+    var body = "";
+    req.on('data', function (chunk) {
+            body += chunk;
+    });
+    req.on('end', function () {
+        var query = url.parse(req.url).query;
+        var jsonObj = JSON.parse(decodeURIComponent(query));
+        // Utilizar jsonObj.fecha para obtener la fecha
+        var desde = jsonObj.desde+".00";
+        var hasta = jsonObj.hasta+".00";
+        var id = jsonObj.id;
+        pool.connect(function(err, client, done) {
+          if(err) {
+            return console.error('Error al obtener un cliente de la "piscina"', err);
+          }
+          const results = [];
+          const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1) AND momento BETWEEN ($2)::timestamp AND ($3)::timestamp;", [id, desde, hasta]);
+          //call `done()` to release the client back to the pool
+          console.log(query);
+          query.on('row', (row) => {
+            results.push(row);
+          });
+          // After all data is returned, close connection and return results
+          query.on('end', function() {
+            res.writeHead(200, {"Content-Type": "application/json"});
+            if(results.length == 0)
+            {
+                var nohay = {'noHay' : true};
+                res.write(JSON.stringify(nohay)); 
+            }
+            else
+            {
+                console.log(results);
+                res.write(JSON.stringify(results)); 
+            }
+            res.end();
+            console.log("Respuesta dada");
+            done();
+          });
+
+          if(err) {
+            return console.error('Error al obtener las posiciones para el tren con ID : '+jsonObj.idtren+ " entre las fechas "+desde+ " -> "+hasta, err);
+          }        
+        });
+        
+    });
+}
+
+function obtenerTrenesCodigoFechaCSV(res, req){
+    console.log("SE HA LLAMADO A DESCARGAR TRENES CON ID y Fecha");
+    var body = "";
+    req.on('data', function (chunk) {
+            body += chunk;
+    });
+    req.on('end', function () {
+        var query = url.parse(req.url).query;
+        var jsonObj = JSON.parse(decodeURIComponent(query));
+        // Utilizar jsonObj.fecha para obtener la fecha
+        var desde = jsonObj.desde+".00";
+        var hasta = jsonObj.hasta+".00";
+        var id = jsonObj.id;
+        pool.connect(function(err, client, done) {
+          if(err) {
+            return console.error('Error al obtener un cliente de la "piscina"', err);
+          }
+          const results = [];
+          const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1) AND momento BETWEEN ($2)::timestamp AND ($3)::timestamp;", [id, desde, hasta]);
+          //call `done()` to release the client back to the pool
+          console.log(query);
+          query.on('row', (row) => {
+            results.push(row);
+          });
+          // After all data is returned, close connection and return results
+          query.on('end', function() {
+            if(results.length == 0)
+            {
+                nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
+                res.setHeader("Set-Cookie", "fileDownload=true; path=/");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader('Content-type', 'binary');
+                console.log("CSV");
+                contenido ="No hay información disponible para el tren con id "+ jsonObj.id+" desde la fecha "+ desde+" hasta la fecha "+ hasta;
+                res.end(contenido);  
+            }
+            else
+            {
+                nombreDocumento = jsonObj.id+"_from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
+                res.setHeader("Set-Cookie", "fileDownload=true; path=/");
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                res.setHeader('Content-type', 'binary');
+                console.log("CSV");
+                contenido ="";
+                for(i =0; i<results.length; i++){
+                    contenido = contenido + results[i].latitud+","+results[i].longitud+","+results[i].momento+"\n";
+                }
+                res.end(contenido);
+            }
+            res.end();
+            console.log("Respuesta dada");
+            done();
+          });
+
+          if(err) {
+            return console.error('Error al obtener las posiciones para el tren con ID : '+jsonObj.idtren+ " entre las fechas "+desde+ " -> "+hasta, err);
           }        
         });
         
@@ -190,8 +442,12 @@ function registrarCliente(res, req){
 }
 
 
-exports.index = index;
+exports.index = index; 
 exports.obtenerTrenCodigo = obtenerTrenCodigo;
+exports.obtenerTrenCodigoCSV = obtenerTrenCodigoCSV;
 exports.obtenerTrenesFecha = obtenerTrenesFecha;
+exports.obtenerTrenesFechaCSV = obtenerTrenesFechaCSV;
 exports.anadirPosicion = anadirPosicion;
 exports.registrarCliente = registrarCliente;
+exports.obtenerTrenesCodigoFecha = obtenerTrenesCodigoFecha;
+exports.obtenerTrenesCodigoFechaCSV = obtenerTrenesCodigoFechaCSV;
