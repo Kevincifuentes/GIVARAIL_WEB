@@ -211,9 +211,11 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	   
 	}
 	$scope.date1 = new Date();
-    $scope.date2 = new Date();
+  $scope.date2 = new Date();
 	$scope.marcadoresHistorico = new Array();
 	$scope.patron = new RegExp('');
+  $scope.usuario = "";
+  $scope.contrasena = "";
 	
 	establecerEventos();
 	 $scope.data = {
@@ -659,4 +661,19 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
               });
         }
       }
-  });
+}).directive('modal', function () {
+    return {
+        restrict: 'EA',
+        scope: {
+            contrasena: '=modalcontrasena',
+            usuario: '=modalUsuario',
+            callbackbuttonright: '&ngClickRightButton',
+            handler: '=handlerLogin'
+        },
+        templateUrl: 'loginmodal.html',
+        transclude: true,
+        controller: function ($scope) {
+            $scope.handler = 'pop'; 
+        },
+    };
+});
