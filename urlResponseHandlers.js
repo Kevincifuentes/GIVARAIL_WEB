@@ -6,6 +6,8 @@ var http = require('http'),
     pg = require('pg'),
     ejs = require('ejs'),
     qs = require('querystring'),
+    jwt    = require('jsonwebtoken'),
+    config = require('./config'),
 	url = require("url");
 
 var config = {
@@ -466,27 +468,42 @@ function login(res, req){
           query.on('end', function() {
             if(results.length == 0)
             {
+                console.log("no existe");
                 res.writeHead(404, {"Content-Type": "application/json"});
                 var nohay = {'noexiste' : true};
                 res.write(JSON.stringify(nohay));
+                res.end();
+                console.log("Respuesta dada");
+                done();
             }
             else
             {
                 if(results[0].password == jsonObj.password){
                     //enviar Token
+                    console.log("correcto");
                     res.writeHead(200, {"Content-Type": "application/json"});
-                    var correcto = {'correcto' : true};
+                    var token = jwt.sign({user: jsonObj.usuario}, config.tokenVar+"", {
+                      expiresIn: '24h',
+                      algorithm: 'HS256'
+                    });
+                    console.log(token);
+                    var correcto = {'token' : token};
                     res.write(JSON.stringify(correcto));
+                    res.end();
+                    console.log("Respuesta dada");
+                    done();
                 }
                 else{
+                    console.log("no existe");
                     res.writeHead(403, {"Content-Type": "application/json"});
-                    var nohay = {'noexiste' : true};
+                    var nohay = {'password' : true};
                     res.write(JSON.stringify(nohay));
+                    res.end();
+                    console.log("Respuesta dada");
+                    done();
                 }
             }
-            res.end();
-            console.log("Respuesta dada");
-            done();
+            
           });
         });
     });

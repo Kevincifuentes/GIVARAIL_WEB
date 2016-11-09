@@ -187,7 +187,8 @@ function prepararSuscripcion($scope)
 
 
 app.controller("giv2railController", [ '$scope', 'leafletData', '$window', function($scope, $window, leafletData) {
-	$scope.csv = true;
+	$scope.token = "";
+  $scope.csv = true;
   $scope.loading = false;
   $scope.usuariologin = "";
   $scope.passwordlogin = "";
@@ -540,6 +541,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     modalCargando.style.display = "none";
                     modalLogin.style.display = "none";
                     $scope.errorLogin = "none";
+                    $scope.token = data.token;
+                    console.log($scope.token);
                     $scope.$apply();
                     prepararSuscripcion($scope);
                   },
@@ -550,6 +553,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                   error: function(xhr, status, error) {
                       //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
                       if (xhr.status == 404) {
+                        modalCargando.style.display = "none";
                         console.log("No existe");
                         $scope.errorLogin = "todo";
                         $scope.$apply();
