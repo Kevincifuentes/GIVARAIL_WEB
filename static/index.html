@@ -28,6 +28,8 @@
     <script src="js/node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script src="js/thread.js"></script>
     <script src="js/jquery.fileDownload.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.9.0.js"></script>
+    
 
     
     <!--<script src="js/giv2rail.js"></script>-->
@@ -81,95 +83,36 @@
     </div>
 
   </div>
-  <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header" align="center">
-          <img class="img-circle" id="img_logo" src="img/deustotech.png">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </button>
+  <div id="divLogin">
+        <div id="divInfoInicio">
+          <img src="img/deustotech.png" style="width: 180px; float: left; margin-left: 150px;">
+          <h1 style="text-align: left; margin-top: 10px; margin-bottom: 30px; margin-left: 350px;">GIVARAIL</h1>
+          <p>El objetivo principal del proyecto GIVARAIL es investigar en la fusión de tecnologías de posicionamiento (GNSS e INS) y visión artificial para conseguir una conducción automática más segura, eficiente y precisa de los vehículos ferroviarios, que redundará en una mayor rentabilidad de los proyectos integrales ferroviarios.</p>
         </div>
-                
-                <!-- Begin # DIV Form -->
-                <div id="div-forms">
-                
-                    <!-- Begin # Login Form -->
-                    <form id="login-form">
-                    <div class="modal-body">
-                <div id="div-login-msg">
-                                <div id="icon-login-msg" class="glyphicon glyphicon-chevron-right"></div>
-                                <span id="text-login-msg">Escribe tu usuario y contraseña</span>
-                            </div>
-                <input id="login_username" class="form-control" ng-model="usuario" type="text" placeholder="Usuario" required>
-                <input id="login_password" class="form-control" ng-model="contrasena" type="password" placeholder="Contraseña" required>
-                            <div class="checkbox">
-                                <label>
-                                    <!--<input type="checkbox"> Remember me-->
-                                </label>
-                            </div>
-                  </div>
-                <div class="modal-footer">
-                            <div>
-                                <button ng-click="logearse()" class="btn btn-primary btn-lg btn-block">Conectarse</button>
-                            </div>
-                  <div>
-                               <!-- <button id="login_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
-                                <button id="login_register_btn" type="button" class="btn btn-link">Register</button>-->
-                            </div>
-                </div>
-                    </form>
-                    <!-- End # Login Form -->
-                    
-                    <!-- Begin | Lost Password Form -->
-                    <form id="lost-form" style="display:none;">
-                  <div class="modal-body">
-                <div id="div-lost-msg">
-                                <div id="icon-lost-msg" class="glyphicon glyphicon-chevron-right"></div>
-                                <span id="text-lost-msg">Type your e-mail.</span>
-                            </div>
-                <input id="lost_email" class="form-control" type="text" placeholder="E-Mail (type ERROR for error effect)" required>
-                  </div>
-                <div class="modal-footer">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
-                            </div>
-                            <div>
-                                <button id="lost_login_btn" type="button" class="btn btn-link">Log In</button>
-                                <button id="lost_register_btn" type="button" class="btn btn-link">Register</button>
-                            </div>
-                </div>
-                    </form>
-                    <!-- End | Lost Password Form -->
-                    
-                    <!-- Begin | Register Form -->
-                    <form id="register-form" style="display:none;">
-                    <div class="modal-body">
-                <div id="div-register-msg">
-                                <div id="icon-register-msg" class="glyphicon glyphicon-chevron-right"></div>
-                                <span id="text-register-msg">Register an account.</span>
-                            </div>
-                <input id="register_username" class="form-control" type="text" placeholder="Username (type ERROR for error effect)" required>
-                            <input id="register_email" class="form-control" type="text" placeholder="E-Mail" required>
-                            <input id="register_password" class="form-control" type="password" placeholder="Password" required>
-                  </div>
-                <div class="modal-footer">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
-                            </div>
-                            <div>
-                                <button id="register_login_btn" type="button" class="btn btn-link">Log In</button>
-                                <button id="register_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
-                            </div>
-                </div>
-                    </form>
-                    <!-- End | Register Form -->
-                    
-                </div>
-                <!-- End # DIV Form -->
-                
-      </div>
-    </div>
+        <div id="formLogin" style="top:440px;">
+          <label>GIVARAIL</label>
+          <input type="text" ng-model="usuariologin" class="form-control" id="inputUsuario" placeholder="Username">
+          <input type="password" ng-model="passwordlogin" class="form-control" id="inputPassword" placeholder="Password">
+          <button class="btn btn-success  btn-lg" ng-click="logearse()" id="botLogin">Login</button>
+          <br>
+          <div ng-show="errorLogin=='todo'" style="text-align: center;" class="alert alert-danger">
+            <strong>Error!</strong> compruebe usuario y contraseña
+          </div>
+          <div ng-show="errorLogin=='password'" style="text-align: center;" class="alert alert-danger">
+            <strong>Error!</strong> contraseña erronea
+          </div>
+          <div ng-show="errorLogin=='login'" style="text-align: center;" class="alert alert-danger">
+            <strong>Error!</strong> en la conexión. Intenteló de nuevo más tarde o contacte con el administrador
+          </div>
+          <div ng-show="errorLogin=='none'" style="text-align: center;" class="alert alert-success">
+            <strong>Correcto!</strong>
+          </div>
+          <div class="progress" style="margin-top:30px; display:none;" id="barraCargando">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; margin-top-50px;">
+              <span class="sr-only">45% Complete</span>
+            </div>
+          </div>
+        </div>
   </div>
 
 </html>

@@ -20,6 +20,7 @@ handle["/trenesIDFechaCSV"] = urlResponseHandlers.obtenerTrenesCodigoFechaCSV;
 handle["/posicion"] = urlResponseHandlers.anadirPosicion;
 handle["/registrar"] = urlResponseHandlers.registrarCliente;
 handle["/autenticar"] = urlResponseHandlers.autenticar;
+handle["/login"] = urlResponseHandlers.login;
 
 
 server.start(controller.dispatch, handle);

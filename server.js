@@ -31,7 +31,7 @@ function start(dispatch, handlers)
 		http.createServer(function(req, res) {
 		var _url = url.parse(req.url).pathname;
 		dispatch(handlers, _url, req, res);
-		}).listen(10000);
+		}).listen(8000);
 		console.log("Server started !! ");
 		//cluster.fork();
 

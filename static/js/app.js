@@ -22,6 +22,8 @@ var fuentePosiciones;
 function establecerEventos(){
 		// Coge el modal
 	var modal = document.getElementById('historicoModal');
+  var modalLogin = document.getElementById('divLogin');
+  modalLogin.style.display = "block";
 
 	// coje el boton de historico
 	var btn = document.getElementById("historico");
@@ -58,7 +60,7 @@ function establecerEventos(){
   }
 }
 
-function prepararSucripcion($scope)
+function prepararSuscripcion($scope)
 {
   var onMessage = function (msg) {
     console.log(msg);
@@ -187,6 +189,9 @@ function prepararSucripcion($scope)
 app.controller("giv2railController", [ '$scope', 'leafletData', '$window', function($scope, $window, leafletData) {
 	$scope.csv = true;
   $scope.loading = false;
+  $scope.usuariologin = "";
+  $scope.passwordlogin = "";
+  $scope.errorLogin = "";
   $scope.icons = {
                 blue: {
                     type: 'div',
@@ -211,11 +216,9 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	   
 	}
 	$scope.date1 = new Date();
-  $scope.date2 = new Date();
+    $scope.date2 = new Date();
 	$scope.marcadoresHistorico = new Array();
 	$scope.patron = new RegExp('');
-  $scope.usuario = "";
-  $scope.contrasena = "";
 	
 	establecerEventos();
 	 $scope.data = {
@@ -244,7 +247,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	todosMarcadores["tren1"] = new Array();
 	todosMarcadores["tren1"].push(marcador);
 	$scope.markers.push(marcador);
-  prepararSucripcion($scope);
+  prepararSuscripcion($scope);
 
     angular.extend($scope, $scope.markers,{
     	center: {
@@ -274,7 +277,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     	$scope.markers = new Array();
     	if(suscrito == false)
     	{
-    		prepararSucripcion($scope);
+    		prepararSuscripcion($scope);
     		primeraVez = true;
     		numeroMarcadoresAhora = [];
     	}
@@ -524,6 +527,50 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     	}
     }
 
+    $scope.logearse = function(){
+      var modalLogin = document.getElementById('divLogin');
+      var modalCargando = document.getElementById('barraCargando');
+      $.ajax({
+                  type: "POST",
+                  url: "login",
+                  contentType: "application/json",
+                  dataType:'json',
+                  data: JSON.stringify({"usuario": $scope.usuariologin, "password" : $scope.passwordlogin}),
+                  success: function(data){
+                    modalCargando.style.display = "none";
+                    modalLogin.style.display = "none";
+                    $scope.errorLogin = "none";
+                    $scope.$apply();
+                    prepararSuscripcion($scope);
+                  },
+                  beforeSend:function()
+                  {
+                    modalCargando.style.display = "block";
+                  },
+                  error: function(xhr, status, error) {
+                      //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
+                      if (xhr.status == 404) {
+                        console.log("No existe");
+                        $scope.errorLogin = "todo";
+                        $scope.$apply();
+                      }
+                      else if (xhr.status == 403){
+                        modalCargando.style.display = "none";
+                        $scope.errorLogin = "password";
+                        $scope.$apply();
+                      }
+                      else{
+                        console.log(error);
+                        var err = eval("(" + xhr.responseText + ")");
+                        modalCargando.style.display = "none";
+                        $scope.errorLogin = "login";
+                        $scope.$apply();
+                      }
+                  },
+                  async: true
+             });
+    }
+
     $scope.buscarHistoricoCSV = function(){
       fuentePosiciones.close();
       suscrito = false;
@@ -661,19 +708,4 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
               });
         }
       }
-}).directive('modal', function () {
-    return {
-        restrict: 'EA',
-        scope: {
-            contrasena: '=modalcontrasena',
-            usuario: '=modalUsuario',
-            callbackbuttonright: '&ngClickRightButton',
-            handler: '=handlerLogin'
-        },
-        templateUrl: 'loginmodal.html',
-        transclude: true,
-        controller: function ($scope) {
-            $scope.handler = 'pop'; 
-        },
-    };
-});
+  });

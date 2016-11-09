@@ -344,7 +344,7 @@
 	width: 250px;
 	left: 50%;
 	margin-left: -125px;
-	height: 200px;
+	height: 300px;
 	top: 400px;
 	
 }
@@ -359,6 +359,7 @@
 #formLogin button{
 	margin-top: 10px;
 	margin-left: 75px;
+	margin-bottom: 10px;
 	width: 80px;
 }
 .divResultado{
@@ -671,6 +672,5 @@
 }
 
 .loading { border:1px solid #ddd; padding:20px; margin:40px 5px; width:80px;}
-
 
 
