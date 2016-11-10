@@ -35,55 +35,82 @@ function index(res) {
     });
 }
 
-function obtenerTrenCodigo(res, req){
-    console.log("SE HA LLAMADO A OBTENER TREN CON CODIGO");
-    var body = "";
-    req.on('data', function (chunk) {
-            body += chunk;
-    });
-    req.on('end', function () {
-        var query = url.parse(req.url).query;
-        var jsonObj = JSON.parse(decodeURIComponent(query));
-        // Utilizar jsonObj.idtren para obtener el ID del tren enviado
-        
-        pool.connect(function(err, client, done) {
-          if(err) {
-            return console.error('Error al obtener un cliente de la "piscina"', err);
-          }
-          const results = [];
-          const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1)", [jsonObj.idtren]);
-          //call `done()` to release the client back to the pool
-
-          query.on('row', (row) => {
-            results.push(row);
-          });
-          // After all data is returned, close connection and return results
-          query.on('end', function() {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            if(results.length == 0)
-            {
-                var nohay = {'noHay' : true};
-                res.write(JSON.stringify(nohay)); 
+function comprobarToken(token, res,req, callback, jsonObj){
+    if(token == undefined){
+            index(res);  
+        }else{
+            if(token == ""){
+                res.writeHead(401, {"Content-Type": "application/json"});
+                res.end();
+                console.log("Respuesta dada");  
             }
-            else
-            {
-                console.log(results);
-                res.write(JSON.stringify(results)); 
-            }
-            res.end();
-            console.log("Respuesta dada");
-            done();
-          });
+            else{
+                jwt.verify(token, config.tokenVar+"", function (err, decoded) {
+                 if (err) {
+                    console.log(err);
+                    res.writeHead(403, {"Content-Type": "application/json"});
+                    res.end();
+                    console.log("Respuesta dada");    
+                  } else {
+                    console.log("ok")
+                    callback(res, req, true, jsonObj);
+                  }
+                });
+            }  
+        }
+}
 
-          if(err) {
-            return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
-          }
-                  
+function obtenerTrenCodigo(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A OBTENER TREN CON CODIGO");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
         });
-        
-    });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenCodigo, jsonObj);      
+        });
+    }
+    else{
+            console.log("CORRECTO");
+            pool.connect(function(err, client, done) {
+              if(err) {
+                return console.error('Error al obtener un cliente de la "piscina"', err);
+              }
+              const results = [];
+              const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1)", [jsonObj.idtren]);
+              //call `done()` to release the client back to the pool
 
+              query.on('row', (row) => {
+                results.push(row);
+              });
+              // After all data is returned, close connection and return results
+              query.on('end', function() {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                if(results.length == 0)
+                {
+                    var nohay = {'noHay' : true};
+                    res.write(JSON.stringify(nohay)); 
+                }
+                else
+                {
+                    console.log(results);
+                    res.write(JSON.stringify(results)); 
+                }
+                res.end();
+                console.log("Respuesta dada");
+                done();
+              });
 
+              if(err) {
+                return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
+              }
+                      
+            });
+    }
 }
 
 function obtenerTrenCodigoCSV(res, req){
@@ -153,16 +180,21 @@ function obtenerTrenCodigoCSV(res, req){
 
 }
 
-function obtenerTrenesFecha(res, req){
-    console.log("SE HA LLAMADO A OBTENER TRENES CON FECHA");
-    var body = "";
-    req.on('data', function (chunk) {
-            body += chunk;
-    });
-    req.on('end', function () {
-        var query = url.parse(req.url).query;
-        var jsonObj = JSON.parse(decodeURIComponent(query));
-        // Utilizar jsonObj.fecha para obtener la fecha
+function obtenerTrenesFecha(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A OBTENER TRENES CON FECHA");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+            // Utilizar jsonObj.fecha para obtener la fecha
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenesFecha, jsonObj);
+        });
+    }else{
         var desde = jsonObj.desde+".00";
         var hasta = jsonObj.hasta+".00";
         console.log(desde);
@@ -200,8 +232,8 @@ function obtenerTrenesFecha(res, req){
             return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
           }        
         });
-        
-    });
+    }
+    
 }
 
 function obtenerTrenesFechaCSV(res, req){
@@ -271,16 +303,21 @@ function obtenerTrenesFechaCSV(res, req){
     });
 }
 
-function obtenerTrenesCodigoFecha(res, req){
-    console.log("SE HA LLAMADO A OBTENER TRENES CON ID y Fecha");
-    var body = "";
-    req.on('data', function (chunk) {
-            body += chunk;
-    });
-    req.on('end', function () {
-        var query = url.parse(req.url).query;
-        var jsonObj = JSON.parse(decodeURIComponent(query));
-        // Utilizar jsonObj.fecha para obtener la fecha
+function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A OBTENER TRENES CON ID y Fecha");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+            // Utilizar jsonObj.fecha para obtener la fecha
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenesCodigoFecha, jsonObj);
+        });
+    }else{
         var desde = jsonObj.desde+".00";
         var hasta = jsonObj.hasta+".00";
         var id = jsonObj.id;
@@ -317,8 +354,7 @@ function obtenerTrenesCodigoFecha(res, req){
             return console.error('Error al obtener las posiciones para el tren con ID : '+jsonObj.idtren+ " entre las fechas "+desde+ " -> "+hasta, err);
           }        
         });
-        
-    });
+    }
 }
 
 function obtenerTrenesCodigoFechaCSV(res, req){

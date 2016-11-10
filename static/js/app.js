@@ -188,6 +188,11 @@ function prepararSuscripcion($scope)
 
 app.controller("giv2railController", [ '$scope', 'leafletData', '$window', function($scope, $window, leafletData) {
 	$scope.token = "";
+  $.ajaxSetup({
+      beforeSend: function(xhr) {
+          xhr.setRequestHeader('x-access-token', $scope.token);
+      }
+  });
   $scope.csv = true;
   $scope.loading = false;
   $scope.usuariologin = "";
@@ -319,10 +324,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 	                    	$.each(data, function(i, item) {
 	                          //console.log(data[i].latitud);
 	                          	marcador = {
-	                          		group: "queryIDTren",
-					                lat: data[i].latitud,
-					                lng: data[i].longitud,
-					                focus: true,
+	                          	group: "queryIDTren",
+      				                lat: data[i].latitud,
+      				                lng: data[i].longitud,
+      				                focus: true,
 			                        title: "Tren",
 			                        draggable: true,
 			                        message: "El tren está aquí " + new Date().toUTCString()+ "",
@@ -347,16 +352,26 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                          
                     	}
                     },
-                    beforeSend:function()
-                    {
-                        
-                    },
                     error: function(xhr, status, error) {
-                        alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
-                        console.log("Ha ocurrido un error al obtener el tren.");
-                        var err = eval("(" + xhr.responseText + ")");
-                        $scope.loading = false;
-                        $scope.$apply();
+                        if (xhr.status == 403) {
+                          alert("La autorización enviada es erronea. Conectese de nuevo al sistema.");
+                          $scope.loading = false;
+                          $scope.$apply();
+                          var modalLogin = document.getElementById('divLogin');
+                          modalLogin.style.display = "block";
+                        }else if(xhr.status == 401){
+                          alert("No se ha autentificado en el sistema. Debe conectarse primero.");
+                          $scope.loading = false;
+                          $scope.$apply();
+                          var modal = document.getElementById('historicoModal');
+                          modal.style.display = "none";
+                          var modalLogin = document.getElementById('divLogin');
+                          modalLogin.style.display = "block";
+                        }else{
+                          alert("Ha ocurrido un error al obtener los trenes, pruebe de nuevo más tarde o contacte con el administrador.");
+                          $scope.loading = false;
+                          $scope.$apply();
+                        }
                     },
                     async: true
 			});
@@ -427,10 +442,6 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                         $scope.$apply();
                         
                     }
-
-                  },
-                  beforeSend:function()
-                  {
 
                   },
                   error: function(xhr, status, error) {
@@ -509,10 +520,6 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     }
 
                   },
-                  beforeSend:function()
-                  {
-
-                  },
                   error: function(xhr, status, error) {
                       alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
                       console.log("Ha ocurrido un error al obtener los trenes en esa fecha.");
@@ -531,6 +538,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     $scope.logearse = function(){
       var modalLogin = document.getElementById('divLogin');
       var modalCargando = document.getElementById('barraCargando');
+      modalCargando.style.display = "block";
       $.ajax({
                   type: "POST",
                   url: "login",
@@ -542,13 +550,13 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     modalLogin.style.display = "none";
                     $scope.errorLogin = "none";
                     $scope.token = data.token;
-                    console.log($scope.token);
+                    $.ajaxSetup({
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('x-access-token', data.token);
+                        }
+                    });
                     $scope.$apply();
                     prepararSuscripcion($scope);
-                  },
-                  beforeSend:function()
-                  {
-                    modalCargando.style.display = "block";
                   },
                   error: function(xhr, status, error) {
                       //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
@@ -626,7 +634,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
               $scope.$apply();
             },
             preparingMessageHtml: "Estamos preparando el fichero. Por favor, espere...",
-            failMessageHtml: "Ocurrió un problema al intentar descargar el fichero. Pruebe de nuevo más tarde.",
+            failMessageHtml: "Ocurrió un problema al intentar descargar el fichero. ¿Está conectado? Pruebe de nuevo más tarde.",
             httpMethod: "GET",
             data: JSON.stringify({"id": id, "desde" : desde, "hasta" : hasta})
           });
