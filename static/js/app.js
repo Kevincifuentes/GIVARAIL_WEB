@@ -562,11 +562,13 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                       //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
                       if (xhr.status == 404) {
                         modalCargando.style.display = "none";
+                        document.getElementById('formLogin').style.height = "300px";
                         console.log("No existe");
                         $scope.errorLogin = "todo";
                         $scope.$apply();
                       }
                       else if (xhr.status == 403){
+                        document.getElementById('formLogin').style.height = "300px";
                         modalCargando.style.display = "none";
                         $scope.errorLogin = "password";
                         $scope.$apply();
@@ -575,6 +577,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                         console.log(error);
                         var err = eval("(" + xhr.responseText + ")");
                         modalCargando.style.display = "none";
+                        document.getElementById('formLogin').style.height = "300px";
                         $scope.errorLogin = "login";
                         $scope.$apply();
                       }
