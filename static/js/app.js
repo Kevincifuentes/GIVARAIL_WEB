@@ -670,7 +670,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
             url: 'trenesIDFechaCSV',
             method: "GET",
             data: JSON.stringify({"id": id, "desde" : desde, "hasta" : hasta}),
-            responseType: 'arraybuffer',
+            processData: false,
+            responseType:'arraybuffer',
             success: function(data){
               var blob = new Blob([data], {type: "text/csv"});
               nombreDocumento = id+"_from_"+desde+"_desde_"+hasta;
@@ -740,7 +741,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
             url: 'trenesFechaCSV',
             method: "GET",
             data: JSON.stringify({ "desde" : desde, "hasta" : hasta}),
-            responseType: 'arraybuffer',
+            processData: false,
+            responseType:'arraybuffer',
             success: function(data){
               var blob = new Blob([data], {type: "text/csv"});
               nombreDocumento = "from_"+desde+"_desde_"+hasta;
