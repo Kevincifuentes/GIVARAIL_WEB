@@ -36,7 +36,7 @@
 
 #divMenu{
 	position: absolute;
-	top: 50px;
+	top: 20%;
 	right: 0px;
 	z-index: 99;
 	width: 16%;
@@ -623,7 +623,7 @@
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 0; /* Sit on top */
+    z-index: 900002; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */

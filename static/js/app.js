@@ -593,7 +593,46 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
       if($scope.data.seleccion === "ID tren")
       {
         var id = $scope.data.inputBusqueda;
-        $.fileDownload("idtrenCSV", {
+        $.ajax({
+            url: 'idtrenCSV',
+            method: "GET",
+            data: JSON.stringify({ "idtren" : id}),
+            processData: false,
+            responseType:'arraybuffer',
+            success: function(data){
+              var blob = new Blob([data], {type: "text/csv"});
+              nombreDocumento = id+"_"+new Date().toUTCString();
+              nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+              saveAs(blob, nombreDocumento + '.csv');
+              $scope.loading = false;
+              $scope.$apply();
+            },
+            error: function(xhr, status, error) {
+                      //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
+              if (xhr.status == 403) {
+                alert("La autorización enviada es erronea. Conectese de nuevo al sistema.");
+                $scope.loading = false;
+                $scope.$apply();
+                var modalLogin = document.getElementById('divLogin');
+                modalLogin.style.display = "block";
+              }else if(xhr.status == 401){
+                alert("No se ha autentificado en el sistema. Debe conectarse primero.");
+                $scope.loading = false;
+                $scope.$apply();
+                var modal = document.getElementById('historicoModal');
+                modal.style.display = "none";
+                var modalLogin = document.getElementById('divLogin');
+                modalLogin.style.display = "block";
+              }else{
+                console.log(error);
+                alert("Ha ocurrido un error al obtener los trenes, pruebe de nuevo más tarde o contacte con el administrador.");
+                $scope.loading = false;
+                $scope.$apply();
+              }
+            },
+            async : true
+        });
+        /*$.fileDownload("idtrenCSV", {
           successCallback: function (url) {
             $scope.loading = false;
             $scope.$apply();
@@ -606,7 +645,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
           failMessageHtml: "Ocurrió un problema al intentar descargar el fichero. Pruebe de nuevo más tarde.",
           httpMethod: "GET",
           data: JSON.stringify({ "idtren" : id})
-        });
+        });*/
       }
       else
       {
@@ -627,7 +666,44 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
             //console.log(hasta);
           }
           console.log(id+" "+desde+" "+hasta);
-          $.fileDownload("trenesIDFechaCSV", {
+          $.ajax({
+            url: 'trenesIDFechaCSV',
+            method: "GET",
+            data: JSON.stringify({"id": id, "desde" : desde, "hasta" : hasta}),
+            responseType: 'arraybuffer',
+            success: function(data){
+              var blob = new Blob([data], {type: "text/csv"});
+              nombreDocumento = id+"_from_"+desde+"_desde_"+hasta;
+              nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+              saveAs(blob, nombreDocumento + '.csv');
+              $scope.loading = false;
+              $scope.$apply();
+            },
+            error: function(xhr, status, error) {
+                      //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
+              if (xhr.status == 403) {
+                alert("La autorización enviada es erronea. Conectese de nuevo al sistema.");
+                $scope.loading = false;
+                $scope.$apply();
+                var modalLogin = document.getElementById('divLogin');
+                modalLogin.style.display = "block";
+              }else if(xhr.status == 401){
+                alert("No se ha autentificado en el sistema. Debe conectarse primero.");
+                $scope.loading = false;
+                $scope.$apply();
+                var modal = document.getElementById('historicoModal');
+                modal.style.display = "none";
+                var modalLogin = document.getElementById('divLogin');
+                modalLogin.style.display = "block";
+              }else{
+                alert("Ha ocurrido un error al obtener los trenes, pruebe de nuevo más tarde o contacte con el administrador.");
+                $scope.loading = false;
+                $scope.$apply();
+              }
+            },
+            async : true
+        });
+          /*$.fileDownload("trenesIDFechaCSV", {
             successCallback: function (url) {
               $scope.loading = false;
               $scope.$apply();
@@ -640,7 +716,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
             failMessageHtml: "Ocurrió un problema al intentar descargar el fichero. ¿Está conectado? Pruebe de nuevo más tarde.",
             httpMethod: "GET",
             data: JSON.stringify({"id": id, "desde" : desde, "hasta" : hasta})
-          });
+          });*/
+
 
         }
         else{
@@ -658,7 +735,45 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
             hasta = hasta.format("yyyy-mm-dd HH:MM:ss");
             //console.log(hasta);
           }
-          $.fileDownload("trenesFechaCSV", {
+
+          $.ajax({
+            url: 'trenesFechaCSV',
+            method: "GET",
+            data: JSON.stringify({ "desde" : desde, "hasta" : hasta}),
+            responseType: 'arraybuffer',
+            success: function(data){
+              var blob = new Blob([data], {type: "text/csv"});
+              nombreDocumento = "from_"+desde+"_desde_"+hasta;
+              nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+              saveAs(blob, nombreDocumento + '.csv');
+              $scope.loading = false;
+              $scope.$apply();
+            },
+            error: function(xhr, status, error) {
+                      //alert("Ha ocurrido un error al realizar la búsqueda. Pruebe de nuevo más tarde");
+              if (xhr.status == 403) {
+                alert("La autorización enviada es erronea. Conectese de nuevo al sistema.");
+                $scope.loading = false;
+                $scope.$apply();
+                var modalLogin = document.getElementById('divLogin');
+                modalLogin.style.display = "block";
+              }else if(xhr.status == 401){
+                alert("No se ha autentificado en el sistema. Debe conectarse primero.");
+                $scope.loading = false;
+                $scope.$apply();
+                var modal = document.getElementById('historicoModal');
+                modal.style.display = "none";
+                var modalLogin = document.getElementById('divLogin');
+                modalLogin.style.display = "block";
+              }else{
+                alert("Ha ocurrido un error al obtener los trenes, pruebe de nuevo más tarde o contacte con el administrador.");
+                $scope.loading = false;
+                $scope.$apply();
+              }
+            },
+            async : true
+        });
+          /*$.fileDownload("trenesFechaCSV", {
             successCallback: function (url) {
               $scope.loading = false;
               $scope.$apply();
@@ -671,7 +786,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
             failMessageHtml: "Ocurrió un problema al intentar descargar el fichero. Pruebe de nuevo más tarde.",
             httpMethod: "GET",
             data: JSON.stringify({ "desde" : desde, "hasta" : hasta})
-          });
+          });*/
         }
         
       }

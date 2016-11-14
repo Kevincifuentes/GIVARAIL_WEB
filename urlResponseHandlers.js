@@ -113,17 +113,22 @@ function obtenerTrenCodigo(res, req, okToken, jsonObj){
     }
 }
 
-function obtenerTrenCodigoCSV(res, req){
-    console.log("SE HA LLAMADO A DESCARGAR INFORMACION DE TREN CON CODIGO");
-    var body = "";
-    req.on('data', function (chunk) {
-            body += chunk;
-    });
-    req.on('end', function () {
-        var query = url.parse(req.url).query;
-        var jsonObj = JSON.parse(decodeURIComponent(query));
-        // Utilizar jsonObj.idtren para obtener el ID del tren enviado
+function obtenerTrenCodigoCSV(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A DESCARGAR INFORMACION DE TREN CON CODIGO");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenCodigoCSV, jsonObj);
+        });
         
+    }else{
+         // Utilizar jsonObj.idtren para obtener el ID del tren enviado
         pool.connect(function(err, client, done) {
           if(err) {
             return console.error('Error al obtener un cliente de la "piscina"', err);
@@ -139,8 +144,9 @@ function obtenerTrenCodigoCSV(res, req){
           query.on('end', function() {
             if(results.length == 0)
             {
-                nombreDocumento = jsonObj.idtren+"_"+new Date().toUTCString()+".csv";
-                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                /*nombreDocumento = jsonObj.idtren+"_"+new Date().toUTCString()+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');*/
+                nombreDocumento = "";
                 res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
                 res.setHeader("Set-Cookie", "fileDownload=true; path=/");
                 res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -151,8 +157,9 @@ function obtenerTrenCodigoCSV(res, req){
             }
             else
             {
-                nombreDocumento = jsonObj.idtren+"_"+new Date().toUTCString()+".csv";
-                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                /*nombreDocumento = jsonObj.idtren+"_"+new Date().toUTCString()+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');*/
+                nombreDocumento = "";
                 res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
                 res.setHeader("Set-Cookie", "fileDownload=true; path=/");
                 res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -174,10 +181,7 @@ function obtenerTrenCodigoCSV(res, req){
           }
                   
         });
-        
-    });
-
-
+    }
 }
 
 function obtenerTrenesFecha(res, req, okToken, jsonObj){
@@ -236,16 +240,22 @@ function obtenerTrenesFecha(res, req, okToken, jsonObj){
     
 }
 
-function obtenerTrenesFechaCSV(res, req){
-    console.log("SE HA LLAMADO A DESCARGAR TRENES CON FECHA");
-    var body = "";
-    req.on('data', function (chunk) {
-            body += chunk;
-    });
-    req.on('end', function () {
-        var query = url.parse(req.url).query;
-        var jsonObj = JSON.parse(decodeURIComponent(query));
-        // Utilizar jsonObj.fecha para obtener la fecha
+function obtenerTrenesFechaCSV(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A DESCARGAR TRENES CON FECHA");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+
+            // Utilizar jsonObj.fecha para obtener la fecha
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenesFechaCSV, jsonObj);
+        });
+    }else{
         var desde = jsonObj.desde+".00";
         var hasta = jsonObj.hasta+".00";
         console.log(desde);
@@ -265,8 +275,9 @@ function obtenerTrenesFechaCSV(res, req){
           query.on('end', function() {
             if(results.length == 0)
             {
-                nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
-                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                /*nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');*/
+                nombreDocumento = "";
                 res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
                 res.setHeader("Set-Cookie", "fileDownload=true; path=/");
                 res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -277,8 +288,9 @@ function obtenerTrenesFechaCSV(res, req){
             }
             else
             {
-                nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
-                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                /*nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');*/
+                nombreDocumento = "";
                 res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
                 res.setHeader("Set-Cookie", "fileDownload=true; path=/");
                 res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -299,8 +311,7 @@ function obtenerTrenesFechaCSV(res, req){
             return console.error('Error al obtener las posiciones para el tren con ID: '+jsonObj.idtren, err);
           }        
         });
-        
-    });
+    }
 }
 
 function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
@@ -357,16 +368,22 @@ function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
     }
 }
 
-function obtenerTrenesCodigoFechaCSV(res, req){
-    console.log("SE HA LLAMADO A DESCARGAR TRENES CON ID y Fecha");
-    var body = "";
-    req.on('data', function (chunk) {
-            body += chunk;
-    });
-    req.on('end', function () {
-        var query = url.parse(req.url).query;
-        var jsonObj = JSON.parse(decodeURIComponent(query));
-        // Utilizar jsonObj.fecha para obtener la fecha
+function obtenerTrenesCodigoFechaCSV(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A DESCARGAR TRENES CON ID y Fecha");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+            // Utilizar jsonObj.fecha para obtener la fecha
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenesCodigoFechaCSV, jsonObj);
+        });
+
+    }else{
         var desde = jsonObj.desde+".00";
         var hasta = jsonObj.hasta+".00";
         var id = jsonObj.id;
@@ -385,8 +402,9 @@ function obtenerTrenesCodigoFechaCSV(res, req){
           query.on('end', function() {
             if(results.length == 0)
             {
-                nombreDocumento = "from_"+desde+"_desde_"+hasta+".csv";
-                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                /*nombreDocumento = jsonObj.id+"from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');*/
+                nombreDocumento = "";
                 res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
                 res.setHeader("Set-Cookie", "fileDownload=true; path=/");
                 res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -397,8 +415,9 @@ function obtenerTrenesCodigoFechaCSV(res, req){
             }
             else
             {
-                nombreDocumento = jsonObj.id+"_from_"+desde+"_desde_"+hasta+".csv";
-                nombreDocumento = nombreDocumento.replace(/\s+/g, '');
+                /*nombreDocumento = jsonObj.id+"_from_"+desde+"_desde_"+hasta+".csv";
+                nombreDocumento = nombreDocumento.replace(/\s+/g, '');*/
+                nombreDocumento = "";
                 res.setHeader('Content-disposition', 'attachment; filename='+nombreDocumento);
                 res.setHeader("Set-Cookie", "fileDownload=true; path=/");
                 res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -419,8 +438,7 @@ function obtenerTrenesCodigoFechaCSV(res, req){
             return console.error('Error al obtener las posiciones para el tren con ID : '+jsonObj.idtren+ " entre las fechas "+desde+ " -> "+hasta, err);
           }        
         });
-        
-    });
+    }
 }
 
 function anadirPosicion(res, req){
