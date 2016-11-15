@@ -449,8 +449,9 @@ function anadirPosicion(res, req){
     });
     req.on('end', function () {
         var jsonObj = JSON.parse(body);
+        console.log(jsonObj.idtren);
         // Utilizar jsonObj.fecha para obtener la fecha
-        conexionesCliente.forEach(function(resp) {
+        /*conexionesCliente.forEach(function(resp) {
             var d = new Date();
             resp.write('id: ' + d.getMilliseconds() + '\n');
             resp.write('data:' + body +   '\n\n');
@@ -463,7 +464,7 @@ function anadirPosicion(res, req){
                    [jsonObj.latitud, jsonObj.longitud, jsonObj.idtren]);
               console.log("añadido");
               done();
-        });
+        });*/
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end();
     });
