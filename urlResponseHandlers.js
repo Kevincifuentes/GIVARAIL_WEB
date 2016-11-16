@@ -449,7 +449,7 @@ function anadirPosicion(res, req){
     });
     req.on('end', function () {
         var jsonObj = JSON.parse(body);
-        console.log(jsonObj.idtren);
+        console.log(jsonObj.idtren + " " jsonObj.latitud + " " + jsonObj.longitud);
         // Utilizar jsonObj.fecha para obtener la fecha
         /*conexionesCliente.forEach(function(resp) {
             var d = new Date();
