@@ -5,7 +5,6 @@
 
 }
 .divSeccion{
-	margin-top: 100%;
 	/*background-color: rgba(205, 230, 255, 1.0);*/
 	background-color: rgba(0, 0, 0, 0.7);
 	z-index: 900001;
@@ -36,11 +35,10 @@
 
 #divMenu{
 	position: absolute;
-	top: 20%;
+	top: 30%;
 	right: 0px;
 	z-index: 99;
 	width: 16%;
-	height: 90%;
 	/*background-color: #FFFFFF;*/
 	float: right;
 	padding-right: 10px;
