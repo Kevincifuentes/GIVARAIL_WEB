@@ -62,6 +62,8 @@ function establecerEventos(){
 
 function prepararSuscripcion($scope)
 {
+  $scope.markers = new Array();
+  todosMarcadores =[];
   var onMessage = function (msg) {
     console.log(msg);
          var contenido = JSON.parse(msg.data);
