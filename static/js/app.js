@@ -240,8 +240,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     };
 	$scope.markers = new Array();
 	marcador = {
-	                lat: 43.046514,
-	                lng: -2.207363,
+	                lat: 43.270537,
+	                lng: -2.939933,
 	                focus: false,
                     title: "Tren",
                     draggable: true,
@@ -774,7 +774,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
               }
             },
             async : true
-        });
+            });
           /*$.fileDownload("trenesFechaCSV", {
             successCallback: function (url) {
               $scope.loading = false;
