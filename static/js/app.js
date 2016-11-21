@@ -109,6 +109,7 @@ function prepararSuscripcion($scope)
          else
          {
             $scope.lineas[contenido.idtren].latlngs.push({ lat: contenido.latitud, lng: contenido.longitud });
+            todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].group = "actual";
             todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lat = contenido.latitud;
             todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].lng = contenido.longitud;
             todosMarcadores[contenido.idtren][ultimoActualizadoTrenes[contenido.idtren]+1].focus = true;
