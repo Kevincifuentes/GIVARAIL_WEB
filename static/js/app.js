@@ -63,7 +63,6 @@ function establecerEventos(){
 function prepararSuscripcion($scope)
 {
   $scope.markers = new Array();
-  todosMarcadores =[];
   var onMessage = function (msg) {
     console.log(msg);
          var contenido = JSON.parse(msg.data);
@@ -95,6 +94,9 @@ function prepararSuscripcion($scope)
                   popupAnchor:  [2, -38] 
                 }
             };
+            if(todosMarcadores[cotenido.idtren] == undefined){
+              todosMarcadores[contenido.idtren] = new Array();
+            }
             todosMarcadores[contenido.idtren].push(marcador);
             $scope.markers.push(marcador);
             $scope.$apply();
