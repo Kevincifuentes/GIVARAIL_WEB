@@ -94,7 +94,7 @@ function prepararSuscripcion($scope)
                   popupAnchor:  [2, -38] 
                 }
             };
-            if(todosMarcadores[cotenido.idtren] == undefined){
+            if(todosMarcadores[contenido.idtren] == undefined){
               todosMarcadores[contenido.idtren] = new Array();
             }
             todosMarcadores[contenido.idtren].push(marcador);
