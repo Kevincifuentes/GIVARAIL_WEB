@@ -257,8 +257,8 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 
     angular.extend($scope, $scope.markers,{
     	center: {
-            lat: 43.046514,
-            lng: -2.207363,
+            lat: 43.270537,
+            lng: -2.939933,
             zoom: 15
         },
         defaults: {
