@@ -335,7 +335,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
       				                focus: true,
 			                        title: "Tren",
 			                        draggable: true,
-			                        message: "El tren está aquí " + new Date().toUTCString()+ "",
+			                        message: "El tren está aquí " + item.momento+ "",
 			                        icon: {
 			                        	iconUrl: arrayIconos[4],
 					                    iconSize:     [38, 38], // tamano del icono
@@ -426,7 +426,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                           focus: true,
                               title: "Tren",
                               draggable: true,
-                              message: "El tren está aquí " + new Date().toUTCString(),
+                              message: "El tren está aquí " + item.momento,
                               icon: {
                                 iconUrl: arrayIconos[4],
                               iconSize:     [38, 38], // tamano del icono
@@ -502,7 +502,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                           focus: true,
                               title: "Tren",
                               draggable: true,
-                              message: "El tren está aquí " + new Date().toUTCString(),
+                              message: "El tren está aquí " + item.momento,
                               icon: {
                                 iconUrl: arrayIconos[4],
                               iconSize:     [38, 38], // tamano del icono
@@ -534,7 +534,6 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                   },
                   async: true
              });
-
         }
     		
     	}
