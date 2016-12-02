@@ -456,7 +456,7 @@ function anadirPosicion(res, req){
             resp.write('id: ' + d.getMilliseconds() + '\n');
             resp.write('data:' + body +   '\n\n');
         });
-        pool.connect(function(err, client, done) {
+        /*pool.connect(function(err, client, done) {
               if(err) {
                 return console.error('Error al obtener un cliente de la "piscina"', err);
               }
@@ -464,7 +464,7 @@ function anadirPosicion(res, req){
                    [jsonObj.latitud, jsonObj.longitud, jsonObj.idtren]);
               console.log("añadido");
               done();
-        });
+        });*/
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end();
     });
