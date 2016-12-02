@@ -466,6 +466,7 @@ function anadirPosicion(res, req){
               done();
         });*/
         res.writeHead(200, {"Content-Type": "application/json"});
+        res.write('OK\n');
         res.end();
     });
 }
