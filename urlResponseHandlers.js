@@ -97,7 +97,7 @@ function obtenerTrenCodigo(res, req, okToken, jsonObj){
                 }
                 else
                 {
-                    console.log(results);
+                    //console.log(results);
                     res.write(JSON.stringify(results)); 
                 }
                 res.end();
@@ -224,7 +224,7 @@ function obtenerTrenesFecha(res, req, okToken, jsonObj){
             }
             else
             {
-                console.log(results);
+                //console.log(results);
                 res.write(JSON.stringify(results)); 
             }
             res.end();
@@ -353,7 +353,7 @@ function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
             }
             else
             {
-                console.log(results);
+                //console.log(results);
                 res.write(JSON.stringify(results)); 
             }
             res.end();
