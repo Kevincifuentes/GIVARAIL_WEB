@@ -354,7 +354,7 @@ function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
             }
             else
             {
-                console.log(results);
+                console.log(results[0].momento);
                 res.write(JSON.stringify(results)); 
             }
             res.end();
