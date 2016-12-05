@@ -445,9 +445,10 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                             $scope.center.lng = data[i].longitud;
                             $scope.center.zoom = 15;
                           }
+                          $scope.$apply();
                         });
                         $scope.loading = false;
-                        $scope.$apply();
+                        
                         
                     }
 
