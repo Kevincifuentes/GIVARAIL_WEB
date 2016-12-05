@@ -435,12 +435,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                                 title: "Tren",
                                 draggable: true,
                                 message: "El tren está aquí " + item.momento,
-                                icon: {
-                                  iconUrl: arrayIconos[4],
-                                  iconSize:     [38, 38], // tamano del icono
-                                  iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
-                                  popupAnchor:  [2, -38] // punto relativo a donde el popup debería abrirse
-                                }
+                                icon: $scope.icons.black
                             };
                           $scope.marcadoresHistorico.push(marcador);
                           $scope.markers.push(marcador);
