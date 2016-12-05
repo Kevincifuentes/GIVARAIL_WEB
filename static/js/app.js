@@ -424,6 +424,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                               console.log("undefined lineas");
                               $scope.lineas[item.idtrenasoc] = {
                                 type: "polyline",
+                                weight: 4,
                                 latlngs: []
                               }
                             }
@@ -437,7 +438,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                                 message: "El tren está aquí " + item.momento,
                                 icon: $scope.icons.black
                             };
-                          //$scope.marcadoresHistorico.push(marcador);
+                          $scope.marcadoresHistorico.push(marcador);
                           //$scope.markers.push(marcador);
                           if(i+1 == data.length)
                           {
