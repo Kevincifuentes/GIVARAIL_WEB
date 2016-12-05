@@ -417,23 +417,31 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     }
                     else
                     {
+
                         $.each(data, function(i, item) {
                             //console.log(data[i].latitud);
-                              marcador = {
-                                group: "queryIDFecha",
-                          lat: data[i].latitud,
-                          lng: data[i].longitud,
-                          focus: true,
-                              title: "Tren",
-                              draggable: true,
-                              message: "El tren está aquí " + item.momento,
-                              icon: {
-                                iconUrl: arrayIconos[4],
-                              iconSize:     [38, 38], // tamano del icono
-                              iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
-                              popupAnchor:  [2, -38] // punto relativo a donde el popup debería abrirse
+                            if($scope.lineas[item.idtrenasoc] == undefined){
+                              console.log("undefined lineas");
+                              $scope.lineas[item.idtrenasoc] = {
+                                type: "polyline",
+                                latlngs: []
                               }
-                      };
+                            }
+                            $scope.lineas[item.idtrenasoc].latlngs.push({ lat: item.latitud, lng: item.longitud });
+                            marcador = {
+                                lat: data[i].latitud,
+                                lng: data[i].longitud,
+                                focus: true,
+                                title: "Tren",
+                                draggable: true,
+                                message: "El tren está aquí " + item.momento,
+                                icon: {
+                                  iconUrl: arrayIconos[4],
+                                  iconSize:     [38, 38], // tamano del icono
+                                  iconAnchor:   [15, 38], // punto del icono que correponde a la localizacion del marcador
+                                  popupAnchor:  [2, -38] // punto relativo a donde el popup debería abrirse
+                                }
+                            };
                           $scope.marcadoresHistorico.push(marcador);
                           $scope.markers.push(marcador);
                           if(i+1 == data.length)
