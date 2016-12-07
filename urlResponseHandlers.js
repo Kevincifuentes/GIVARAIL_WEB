@@ -341,8 +341,7 @@ function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
           //call `done()` to release the client back to the pool
           console.log(query);
           query.on('row', (row) => {
-          	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-          	console.log("Fecha: "+ typeof sdf.format(row.momento));
+          	console.log("Fecha: "+ row.momento.toLocaleDateString() + " "+ row.momento.toLocaleTimeString());
             results.push(row);
           });
           // After all data is returned, close connection and return results
