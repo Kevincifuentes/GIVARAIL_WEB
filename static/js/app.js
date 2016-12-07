@@ -18,6 +18,8 @@ var client;
 var conectadoStomp = false;
 var suscripcion;
 var fuentePosiciones;
+var colores = ["red", "green"];
+var ultimoSeleccionado = 0;
 
 function establecerEventos(){
 		// Coge el modal
@@ -269,7 +271,12 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
         defaults: {
         	zoomControlPosition: "bottomleft",
             scrollWheelZoom: true
-        }
+        },
+        events: {
+                  path: {
+                      enable: [ 'click', 'mouseover' ]
+                  }
+              }
     });
 
     $scope.comprobarBusqueda = function(){
@@ -302,6 +309,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
     }
 
     $scope.buscarHistorico = function(){
+      ultimoSeleccionado = 0;
     	fuentePosiciones.close();
     	suscrito = false;
       $scope.loading = true;
@@ -328,6 +336,18 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     	{
 	                    	$.each(data, function(i, item) {
 	                          //console.log(data[i].latitud);
+                            if($scope.lineas[item.idtrenasoc] == undefined){
+                              console.log("undefined lineas");
+                              $scope.lineas[item.idtrenasoc] = {
+                                color: colores[ultimoSeleccionado],
+                                type: "polyline",
+                                weight: 4,
+                                latlngs: [],
+                                label: {message: "<h3>Tren con ID "+item.idtrenasoc+"</h3><p>Mensaje de prueba</p>"}
+                              }
+                              ultimoSeleccionado++;
+                            }
+                            $scope.lineas[item.idtrenasoc].latlngs.push({ lat: item.latitud, lng: item.longitud });
 	                          	marcador = {
 	                          	group: "queryIDTren",
       				                lat: data[i].latitud,
@@ -344,7 +364,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
 			                        }
         			           			};
         				            $scope.marcadoresHistorico.push(marcador);
-        				            $scope.markers.push(marcador);
+        				            //$scope.markers.push(marcador);
         				            if(i+1 == data.length)
         				            {
         				            	$scope.center.lat = data[i].latitud;
@@ -423,10 +443,13 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                             if($scope.lineas[item.idtrenasoc] == undefined){
                               console.log("undefined lineas");
                               $scope.lineas[item.idtrenasoc] = {
+                                color: colores[ultimoSeleccionado],
                                 type: "polyline",
                                 weight: 4,
-                                latlngs: []
+                                latlngs: [],
+                                label: {message: "<h3>Tren con ID "+item.idtrenasoc+"</h3><p>Mensaje de prueba</p>"}
                               }
+                              ultimoSeleccionado++;
                             }
                             $scope.lineas[item.idtrenasoc].latlngs.push({ lat: item.latitud, lng: item.longitud });
                             marcador = {
@@ -497,8 +520,21 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                     }
                     else
                     {
+
                         $.each(data, function(i, item) {
                             //console.log(data[i].latitud);
+                            if($scope.lineas[item.idtrenasoc] == undefined){
+                              console.log("undefined lineas");
+                              $scope.lineas[item.idtrenasoc] = {
+                                color: colores[ultimoSeleccionado],
+                                type: "polyline",
+                                weight: 4,
+                                latlngs: [],
+                                label: {message: "<h3>Tren con ID "+item.idtrenasoc+"</h3><p>Mensaje de prueba</p>"}
+                              }
+                              ultimoSeleccionado++;
+                            }
+                            $scope.lineas[item.idtrenasoc].latlngs.push({ lat: item.latitud, lng: item.longitud });
                               marcador = {
                                 group: "queryFecha",
                           lat: data[i].latitud,
@@ -515,7 +551,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                               }
                         };
                         $scope.marcadoresHistorico.push(marcador);
-                        $scope.markers.push(marcador);
+                        //$scope.markers.push(marcador);
                         if(i+1 == data.length)
                         {
                           $scope.center.lat = data[i].latitud;
