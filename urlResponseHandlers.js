@@ -341,7 +341,7 @@ function obtenerTrenesCodigoFecha(res, req, okToken, jsonObj){
           //call `done()` to release the client back to the pool
           console.log(query);
           query.on('row', (row) => {
-          	console.log("Fecha: "+ row.momento);
+          	console.log("Fecha: "+ typeof row.momento);
             results.push(row);
           });
           // After all data is returned, close connection and return results
