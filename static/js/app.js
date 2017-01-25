@@ -201,6 +201,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
           xhr.setRequestHeader('x-access-token', $scope.token);
       }
   });
+  $scope.dentro = false;
   $scope.csv = true;
   $scope.loading = false;
   $scope.usuariologin = "";
@@ -273,7 +274,7 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
         },
         events: {
                     path: {
-                        enable: [ 'click', 'mouseover' ]
+                        enable: [ 'click', 'mouseover', 'mouseout' ]
                     }
                 },
         lineas : {
@@ -296,6 +297,34 @@ app.controller("giv2railController", [ '$scope', 'leafletData', '$window', funct
                 
         }
     });
+
+    $scope.$on('leafletDirectivePath.mapa.mouseover', function (event, path) {
+                $scope.dentro = true;
+                var leafEvent = path.leafletEvent;
+                console.log("Dentro");
+                console.log(leafEvent.latlng.lat + " " + leafEvent.latlng.lng);
+                console.log(path.modelName);
+                console.log(event);
+                $scope.lineas[path.modelName].color = '#8E8E00';
+    });
+
+    $scope.$on('leafletDirectiveMap.mapa.mousemove', function (event, path) {
+                if($scope.dentro == true){
+                  var leafEvent = path.leafletEvent;
+                  console.log("Moviendo");
+                  console.log(leafEvent.latlng.lat + " " + leafEvent.latlng.lng);
+                  console.log(path.modelName);
+                  console.log(event);
+                }
+    });
+
+     $scope.$on('leafletDirectivePath.mapa.mouseout', function (event, path) {
+                $scope.dentro = false;
+                console.log("Fuera");
+                console.log(path.modelName);
+                console.log(event);
+                $scope.lineas[path.modelName].color = "red";
+      });
 
     $scope.comprobarBusqueda = function(){
 
