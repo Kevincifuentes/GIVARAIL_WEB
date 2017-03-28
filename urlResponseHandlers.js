@@ -571,7 +571,7 @@ function login(res, req){
     });
   }
 
-  function obtenerTrenes(res, req){
+  function obtenerTrenes(res, req, okToken, jsonObj){
     if(okToken != true){
         console.log("SE HA LLAMADO A OBTENER TRENES");
         var body = "";
