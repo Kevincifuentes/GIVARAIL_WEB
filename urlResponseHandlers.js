@@ -569,7 +569,12 @@ function login(res, req){
           });
         });
     });
-}
+  }
+
+  function obtenerTrenes(res, req){
+    console.log("SE HA LLAMADO A OBTENER TRENES");
+
+  }
 
 
 exports.index = index; 
@@ -582,3 +587,4 @@ exports.registrarCliente = registrarCliente;
 exports.obtenerTrenesCodigoFecha = obtenerTrenesCodigoFecha;
 exports.obtenerTrenesCodigoFechaCSV = obtenerTrenesCodigoFechaCSV;
 exports.login = login;
+exports.obtenerTrenes = obtenerTrenes;

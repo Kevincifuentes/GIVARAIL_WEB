@@ -21,6 +21,7 @@ handle["/posicion"] = urlResponseHandlers.anadirPosicion;
 handle["/registrar"] = urlResponseHandlers.registrarCliente;
 handle["/autenticar"] = urlResponseHandlers.autenticar;
 handle["/login"] = urlResponseHandlers.login;
+handle["/trenes"] = urlResponseHandlers.obtenerTrenes;
 
 
 server.start(controller.dispatch, handle);
