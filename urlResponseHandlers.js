@@ -582,7 +582,7 @@ function login(res, req){
             var query = url.parse(req.url).query;
             var jsonObj = JSON.parse(decodeURIComponent(query));
             var token = req.headers['x-access-token'];
-            comprobarToken(token, res, req, obtenerTrenCodigo, jsonObj);      
+            comprobarToken(token, res, req, obtenerTrenes, jsonObj);      
         });
     }
     else{
