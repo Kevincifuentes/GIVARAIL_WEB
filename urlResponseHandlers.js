@@ -572,8 +572,56 @@ function login(res, req){
   }
 
   function obtenerTrenes(res, req){
-    console.log("SE HA LLAMADO A OBTENER TRENES");
+    if(okToken != true){
+        console.log("SE HA LLAMADO A OBTENER TRENES");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var jsonObj = JSON.parse(decodeURIComponent(query));
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, obtenerTrenCodigo, jsonObj);      
+        });
+    }
+    else{
+            console.log("CORRECTO");
+            pool.connect(function(err, client, done) {
+              if(err) {
+                return console.error('Error al obtener un cliente de la "piscina"', err);
+              }
+              const results = [];
+              const query = client.query("SELECT * FROM Trenes");
+              //call `done()` to release the client back to the pool
 
+              query.on('row', (row) => {
+                results.push(row);
+              });
+              // After all data is returned, close connection and return results
+              query.on('end', function() {
+                res.writeHead(200, {"Content-Type": "application/json"});
+                if(results.length == 0)
+                {
+                    var nohay = {'noHay' : true};
+                    res.write(JSON.stringify(nohay)); 
+                }
+                else
+                {
+                    //console.log(results);
+                    res.write(JSON.stringify(results)); 
+                }
+                res.end();
+                console.log("Respuesta dada");
+                done();
+              });
+
+              if(err) {
+                return console.error('Error al obtener los trenes: ', err);
+              }
+                      
+            });
+    }
   }
 
 
