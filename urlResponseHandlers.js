@@ -627,9 +627,6 @@ function login(res, req){
   function obtenerUltimaPos(res, req, okToken, jsonObj){
     if(okToken != true){
         console.log("SE HA LLAMADO A OBTENER ULTIMAPOS");
-        var url_parts = url.parse(req.url, true);
-        var query = url_parts.query;
-        console.log(query.id);
         var body = "";
         req.on('data', function (chunk) {
                 body += chunk;
@@ -643,13 +640,14 @@ function login(res, req){
     else{
             var url_parts = url.parse(req.url, true);
             var query = url_parts.query;
-            console.log("CORRECTO " +query.id);
+            var obtainedID = query.id;
+            console.log("CORRECTO ");
             pool.connect(function(err, client, done) {
               if(err) {
                 return console.error('Error al obtener un cliente de la "piscina"', err);
               }
               const results = [];
-              const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1) ORDER BY id LIMIT 1", [query.id]);
+              const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1) ORDER BY id LIMIT 1", [obtainedID]);
               //call `done()` to release the client back to the pool
 
               query.on('row', (row) => {
