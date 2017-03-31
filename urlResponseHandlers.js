@@ -627,13 +627,15 @@ function login(res, req){
   function obtenerUltimaPos(res, req, okToken, jsonObj){
     if(okToken != true){
         console.log("SE HA LLAMADO A OBTENER ULTIMAPOS");
+        var url_parts = url.parse(req.url, true);
+        var query = url_parts.query;
+        console.log(query.id);
         var body = "";
         req.on('data', function (chunk) {
                 body += chunk;
         });
         req.on('end', function () {
             var query = url.parse(req.url).query;
-            var jsonObj = JSON.parse(decodeURIComponent(query));
             var token = req.headers['x-access-token'];
             comprobarToken(token, res, req, obtenerUltimaPos, jsonObj);      
         });
