@@ -641,7 +641,7 @@ function login(res, req){
     else{
             var url_parts = url.parse(req.url, true);
             var query = url_parts.query;
-            console.log("CORRECTO " +query);
+            console.log("CORRECTO " +str(query));
             pool.connect(function(err, client, done) {
               if(err) {
                 return console.error('Error al obtener un cliente de la "piscina"', err);
