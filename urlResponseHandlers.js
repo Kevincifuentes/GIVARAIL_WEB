@@ -645,7 +645,7 @@ function login(res, req){
                 return console.error('Error al obtener un cliente de la "piscina"', err);
               }
               const results = [];
-              const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1) AND ORDER BY id LIMIT 1", [jsonObj.id]);
+              const query = client.query("SELECT * FROM Posiciones WHERE id_trenasoc=($1) ORDER BY id LIMIT 1", [jsonObj.id]);
               //call `done()` to release the client back to the pool
 
               query.on('row', (row) => {
