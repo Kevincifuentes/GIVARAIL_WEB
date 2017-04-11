@@ -701,7 +701,6 @@ function login(res, req){
             res.write(JSON.stringify(ultimaActualizacionDate));
             res.end();
             console.log("Respuesta dada");
-            done();
     //}
   }
 
