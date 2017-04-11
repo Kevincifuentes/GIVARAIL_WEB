@@ -22,7 +22,9 @@ var config = {
 
 var pool = new pg.Pool(config);
 var conexionesCliente = [];
-var ultimaActualizacionDate = new Date();
+var offset = -(new Date().getTimezoneOffset() / 60);
+
+var ultimaActualizacionDate = new Date( new Date().getTime() + offset * 3600 * 1000).toUTCString().replace( / GMT$/, "" );
 
 function index(res) {
 	console.log("SE HA LLAMADO A INDEX");
@@ -463,7 +465,7 @@ function anadirPosicion(res, req){
             resp.write('id: ' + d.getMilliseconds() + '\n');
             resp.write('data:' + body +   '\n\n');
         });
-        ultimaActualizacionDate = new Date();
+        ultimaActualizacionDate = new Date( new Date().getTime() + offset * 3600 * 1000).toUTCString().replace( / GMT$/, "" )
         /*pool.connect(function(err, client, done) {
               if(err) {
                 return console.error('Error al obtener un cliente de la "piscina"', err);
