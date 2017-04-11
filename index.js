@@ -23,6 +23,7 @@ handle["/autenticar"] = urlResponseHandlers.autenticar;
 handle["/login"] = urlResponseHandlers.login;
 handle["/trenes"] = urlResponseHandlers.obtenerTrenes;
 handle["/ultimapos"] = urlResponseHandlers.obtenerUltimaPos;
+handle["/ultimaActualizacion"] = urlResponseHandlers.ultimaActualizacion;
 
 
 server.start(controller.dispatch, handle);

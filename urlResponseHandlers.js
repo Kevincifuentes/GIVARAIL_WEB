@@ -22,6 +22,7 @@ var config = {
 
 var pool = new pg.Pool(config);
 var conexionesCliente = [];
+var ultimaActualizacionDate = new Date();
 
 function index(res) {
 	console.log("SE HA LLAMADO A INDEX");
@@ -462,6 +463,7 @@ function anadirPosicion(res, req){
             resp.write('id: ' + d.getMilliseconds() + '\n');
             resp.write('data:' + body +   '\n\n');
         });
+        ultimaActualizacionDate = new Date();
         /*pool.connect(function(err, client, done) {
               if(err) {
                 return console.error('Error al obtener un cliente de la "piscina"', err);
@@ -679,6 +681,30 @@ function login(res, req){
     }
   }
 
+  function ultimaActualizacion(res, req, okToken, jsonObj){
+    if(okToken != true){
+        console.log("SE HA LLAMADO A ultimaActualizacion");
+        var body = "";
+        req.on('data', function (chunk) {
+                body += chunk;
+        });
+        req.on('end', function () {
+            var query = url.parse(req.url).query;
+            var token = req.headers['x-access-token'];
+            comprobarToken(token, res, req, ultimaActualizacion, jsonObj);      
+        });
+    }
+    else{
+            console.log("CORRECTO ");
+            res.writeHead(200, {"Content-Type": "application/json"});
+            //console.log(results);
+            res.write(JSON.stringify(ultimaActualizacionDate));
+            res.end();
+            console.log("Respuesta dada");
+            done();
+    }
+  }
+
 
 exports.index = index; 
 exports.obtenerTrenCodigo = obtenerTrenCodigo;
@@ -692,3 +718,4 @@ exports.obtenerTrenesCodigoFechaCSV = obtenerTrenesCodigoFechaCSV;
 exports.login = login;
 exports.obtenerTrenes = obtenerTrenes;
 exports.obtenerUltimaPos = obtenerUltimaPos;
+exports.ultimaActualizacion = ultimaActualizacion;
