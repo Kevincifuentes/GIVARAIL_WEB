@@ -682,7 +682,7 @@ function login(res, req){
   }
 
   function ultimaActualizacion(res, req, okToken, jsonObj){
-    if(okToken != true){
+    /*if(okToken != true){
         console.log("SE HA LLAMADO A ultimaActualizacion");
         var body = "";
         req.on('data', function (chunk) {
@@ -694,7 +694,7 @@ function login(res, req){
             comprobarToken(token, res, req, ultimaActualizacion, jsonObj);      
         });
     }
-    else{
+    else{*/
             console.log("CORRECTO ");
             res.writeHead(200, {"Content-Type": "application/json"});
             //console.log(results);
@@ -702,7 +702,7 @@ function login(res, req){
             res.end();
             console.log("Respuesta dada");
             done();
-    }
+    //}
   }
 
 
